@@ -38,7 +38,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            new MadrakIO\EasyAdminBundle\MadrakIOEasyAdminBundle(),
+            new MadrakIO\Bundle\EasyAdminBundle\MadrakIOEasyAdminBundle(),
         );
 
         // ...
