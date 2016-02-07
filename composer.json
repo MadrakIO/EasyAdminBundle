@@ -1,0 +1,29 @@
+{
+    "name": "madrakio/easy-admin-bundle",
+    "description": "Easy Admin Bundle: An easy way to get your admin panel up and running",
+    "keywords": ["admin", "management", "crud", "symfony"],
+    "homepage": "https://github.com/madrakio/easy-admin-bundle",
+    "authors": [
+        {
+            "name": "John Madrak",
+            "homepage": "http://madrak.net",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.9",
+        "symfony/symfony": ">=2.8.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.8"
+    },
+    "suggest": {
+        "knplabs/knp-paginator-bundle": "2.5.*"
+    },
+    "autoload": {                                                                                                                                                                                                                         
+        "psr-4": {                                                                                                                                                                                                                        
+            "MadrakIO\\Bundle\\EasyAdminBundle\\": ""
+        }
+    }
+}

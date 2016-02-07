@@ -1,0 +1,41 @@
+{% extends parent_template %}
+
+{% block content %}
+    {% block crud_top_navigation %}
+        <div class="col-sm-12 text-right">
+            {% block crud_create_button %}
+                {% if routes.create is defined and current_route != routes.create %}
+                    <a href="{{ path(routes.create) }}" class="btn btn-primary">Create</a>
+                {% endif %}
+            {% endblock %}
+
+            {% block crud_edit_button %}
+                {% if routes.edit is defined and entity is defined and entity.id is not empty and current_route != routes.edit %}
+                    <a href="{{ path(routes.edit, {'id': entity.id}) }}" class="btn btn-warning">Edit</a>
+                {% endif %}
+            {% endblock %}
+
+            {% block crud_show_button %}
+                {% if routes.show is defined and entity is defined and entity.id is not empty and current_route != routes.show  %}
+                    <a href="{{ path(routes.show, {'id': entity.id}) }}" class="btn btn-info">Show</a>
+                {% endif %}
+            {% endblock %}
+
+            {% block crud_delete_button %}
+                {% if routes.delete is defined and delete_form is defined %}
+                    {{ form_start(delete_form) }}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    {{ form_end(delete_form) }}
+                {% endif %}
+            {% endblock %}
+
+            {% block crud_list_button %}
+                {% if routes.list is defined and current_route != routes.list %}
+                    <a href="{{ path(routes.list) }}" class="btn btn-default">List</a>
+                {% endif %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+    
+    {% block crud_content %}{% endblock %}
+{% endblock %}

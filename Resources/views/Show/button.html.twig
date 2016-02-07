@@ -1,0 +1,4 @@
+<tr>
+    <th>{{ label }}</th>
+    <td><a href="{{ path(route.name, route.parameters) }}" class="{% if css_class is defined %}{{ css_class}}{% else %}btn btn-default{% endif %}">{{ label }}</a></td>
+</tr>

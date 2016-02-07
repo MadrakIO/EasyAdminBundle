@@ -1,0 +1,13 @@
+services:
+    madrak_io_easy_admin.crud_view_twig_extension:
+        class: MadrakIO\Bundle\EasyAdminBundle\CrudView\CrudViewTwigExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+    madrak_io_easy_admin.field_type_chain:
+        class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldTypeChain
+    madrak_io_easy_admin.field_type_guesser:
+        class: MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser
+        arguments: ['@madrak_io_easy_admin.field_type_chain']
+    madrak_io_easy_admin.crud_type:
+        abstract: true
