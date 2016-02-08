@@ -27,7 +27,7 @@ abstract class AbstractListType extends AbstractType
         $this->build();
         $data = $this->getDataList($request);
 
-        return $this->templating->render('MadrakIOEasyAdminBundle:List:Layout/wrapper.html.twig', ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data, 'has_pagination' => $this->hasPaginator()]);
+        return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data]);
     }
 
     private function getDataList(Request $request)
@@ -69,5 +69,14 @@ abstract class AbstractListType extends AbstractType
         }
                 
         return $results;
+    }
+    
+    private function getListWrapperView()
+    {
+        if ($this->hasPaginator() === true) {
+            return 'MadrakIOEasyAdminBundle:List:Layout/wrapper_pagination.html.twig';
+        }
+        
+        return 'MadrakIOEasyAdminBundle:List:Layout/wrapper.html.twig';
     }
 }
