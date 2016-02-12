@@ -42,6 +42,7 @@ abstract class AbstractCRUDController extends Controller
         return $this->render('MadrakIOEasyAdminBundle:CRUD:list.html.twig', array(
             'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
             'current_route' => $this->getCurrentRouteName($request),                        
+            'routes' => $this->getRelatedCRUDRoutes($request),            
             'listView' => $this->entityList->createView($request),
         ));
     }
