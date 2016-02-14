@@ -3,7 +3,7 @@
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser;
 
 use \Exception;
-use MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldTypeChain;
+use MadrakIO\Bundle\EasyAdminBundle\Chain\FieldTypeChain;
 
 class FieldTypeGuesser
 {

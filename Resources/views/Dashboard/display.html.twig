@@ -1,0 +1,17 @@
+{% extends parent_template %}
+
+{% block content %}
+    {% for controller in controllers %} 
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>{{ controller.getUserFriendlyEntityName }}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="{{ path(controller.getRelatedCRUDRoute('list')) }}" class="btn btn-default">List</a>
+                <a href="{{ path(controller.getRelatedCRUDRoute('create')) }}" class="btn btn-default">Create</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

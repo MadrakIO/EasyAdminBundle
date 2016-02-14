@@ -5,9 +5,15 @@ services:
         tags:
             - { name: twig.extension }
     madrak_io_easy_admin.field_type_chain:
-        class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldTypeChain
+        class: MadrakIO\Bundle\EasyAdminBundle\Chain\FieldTypeChain
     madrak_io_easy_admin.field_type_guesser:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser
         arguments: ['@madrak_io_easy_admin.field_type_chain']
+    madrak_io_easy_admin.crud_controller_chain:
+        class: MadrakIO\Bundle\EasyAdminBundle\Chain\CrudControllerChain        
     madrak_io_easy_admin.crud_type:
         abstract: true
+    madrak_io_easy_admin.crud_controller:
+        abstract: true
+        calls:
+            - [ setContainer, [ @service_container ]]
