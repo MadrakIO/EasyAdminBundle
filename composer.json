@@ -19,7 +19,8 @@
         "symfony/phpunit-bridge": "~2.8"
     },
     "suggest": {
-        "knplabs/knp-paginator-bundle": "2.5.*"
+        "knplabs/knp-paginator-bundle": "2.5.*",
+        "knplabs/knp-menu-bundle": "2.1.*"
     },
     "autoload": {                                                                                                                                                                                                                         
         "psr-4": {                                                                                                                                                                                                                        

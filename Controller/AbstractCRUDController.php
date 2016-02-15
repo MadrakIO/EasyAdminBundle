@@ -44,7 +44,7 @@ abstract class AbstractCRUDController extends Controller
         return $this->render('MadrakIOEasyAdminBundle:CRUD:list.html.twig', array(
             'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
             'current_route' => $this->getCurrentRouteName($request),                        
-            'routes' => $this->getRelatedCRUDRoutes(),            
+            'routes' => $this->getCrudRoutes(),            
             'listView' => $this->entityList->createView($request),
         ));
     }
@@ -65,13 +65,13 @@ abstract class AbstractCRUDController extends Controller
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute($this->getRelatedCRUDRoute('show'), array('id' => $entity->getId()));
+            return $this->redirectToRoute($this->getCrudRoute('show'), array('id' => $entity->getId()));
         }
 
         return $this->render('MadrakIOEasyAdminBundle:CRUD:create.html.twig', array(
             'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
             'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getRelatedCRUDRoutes(),
+            'routes' => $this->getCrudRoutes(),
             'entity' => $entity,
             'form' => $form->createView(),
         ));
@@ -91,7 +91,7 @@ abstract class AbstractCRUDController extends Controller
         return $this->render('MadrakIOEasyAdminBundle:CRUD:show.html.twig', array(
             'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
             'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getRelatedCRUDRoutes(),
+            'routes' => $this->getCrudRoutes(),
             'entity' => $entity,            
             'showView' => $this->entityShow->createView($entity),
             'delete_form' => $deleteForm->createView(),
@@ -115,13 +115,13 @@ abstract class AbstractCRUDController extends Controller
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute($this->getRelatedCRUDRoute('edit'), array('id' => $entity->getId()));
+            return $this->redirectToRoute($this->getCrudRoute('edit'), array('id' => $entity->getId()));
         }
 
         return $this->render('MadrakIOEasyAdminBundle:CRUD:edit.html.twig', array(
             'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),       
             'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getRelatedCRUDRoutes(),            
+            'routes' => $this->getCrudRoutes(),            
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -145,7 +145,7 @@ abstract class AbstractCRUDController extends Controller
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute($this->getRelatedCRUDRoute('list'));
+        return $this->redirectToRoute($this->getCrudRoute('list'));
     }
 
     /**
@@ -158,7 +158,7 @@ abstract class AbstractCRUDController extends Controller
     protected function createDeleteForm(Request $request, $entity)
     {
         return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
-            ->setAction($this->generateUrl($this->getRelatedCRUDRoute('delete'), array('id' => $entity->getId())))
+            ->setAction($this->generateUrl($this->getCrudRoute('delete'), array('id' => $entity->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;
@@ -177,7 +177,7 @@ abstract class AbstractCRUDController extends Controller
     /**
      * Gets related routes based on current route
      */
-    public function getRelatedCRUDRoutes()
+    public function getCrudRoutes()
     {
         $annotatedControllerRouteLoader = new AnnotatedRouteControllerLoader(new AnnotationReader());
         $routeCollection = $annotatedControllerRouteLoader->load(get_class($this));
@@ -192,11 +192,19 @@ abstract class AbstractCRUDController extends Controller
     }    
 
     /**
+     * Check if the controller has the specified crud route
+     */
+    public function hasCrudRoute($routeType)
+    {        
+        return array_key_exists($routeType, $this->getCrudRoutes());
+    }
+    
+    /**
      * Gets a specific related route based on the current route
      */    
-    public function getRelatedCRUDRoute($routeType)
+    public function getCrudRoute($routeType)
     {
-        return $this->getRelatedCRUDRoutes()[$routeType];
+        return $this->getCrudRoutes()[$routeType];
     }
     
     /**
