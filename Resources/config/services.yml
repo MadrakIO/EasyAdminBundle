@@ -11,7 +11,11 @@ services:
         arguments: ['@madrak_io_easy_admin.field_type_chain']
     madrak_io_easy_admin.crud_controller_chain:
         class: MadrakIO\Bundle\EasyAdminBundle\Chain\CrudControllerChain        
-    madrak_io_easy_admin.crud_type:
+    madrak_io_easy_admin.crud_list_type:
+        abstract: true
+        calls:
+            - [ setCheckGrants, [ '%madrak_io_easy_admin.check_grants%' ]]
+    madrak_io_easy_admin.crud_show_type:
         abstract: true
     madrak_io_easy_admin.crud_controller:
         abstract: true

@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractShowType;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractListType;
+use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractCRUDController extends Controller
 {
@@ -41,12 +42,9 @@ abstract class AbstractCRUDController extends Controller
      */
     public function listAction(Request $request)
     {
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:list.html.twig', array(
-            'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-            'current_route' => $this->getCurrentRouteName($request),                        
-            'routes' => $this->getCrudRoutes(),            
-            'listView' => $this->entityList->createView($request),
-        ));
+        return $this->render('MadrakIOEasyAdminBundle:CRUD:list.html.twig',
+            $this->getCrudViewParameters($request) + ['listView' => $this->entityList->createView($request)]
+        );
     }
 
     /**
@@ -58,6 +56,9 @@ abstract class AbstractCRUDController extends Controller
     public function createAction(Request $request)
     {
         $entity = new $this->entityClass;
+
+        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
+        
         $form = $this->createForm($this->entityFormType, $entity);
         $form->handleRequest($request);
 
@@ -68,13 +69,12 @@ abstract class AbstractCRUDController extends Controller
             return $this->redirectToRoute($this->getCrudRoute('show'), array('id' => $entity->getId()));
         }
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:create.html.twig', array(
-            'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-            'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getCrudRoutes(),
-            'entity' => $entity,
-            'form' => $form->createView(),
-        ));
+        return $this->render('MadrakIOEasyAdminBundle:CRUD:create.html.twig', 
+            $this->getCrudViewParameters($request) + 
+                [
+                    'entity' => $entity,
+                    'form' => $form->createView(),
+                ]);
     }
 
     /**
@@ -86,16 +86,18 @@ abstract class AbstractCRUDController extends Controller
     public function showAction(Request $request, $id)
     {
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy(['id' => $id]);
+
+        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::SHOW, $entity);
+        
         $deleteForm = $this->createDeleteForm($request, $entity);
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:show.html.twig', array(
-            'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-            'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getCrudRoutes(),
-            'entity' => $entity,            
-            'showView' => $this->entityShow->createView($entity),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render('MadrakIOEasyAdminBundle:CRUD:show.html.twig',
+            $this->getCrudViewParameters($request) + 
+                [
+                    'entity' => $entity,            
+                    'showView' => $this->entityShow->createView($entity),
+                    'delete_form' => $deleteForm->createView(),
+                ]);
     }
 
     /**
@@ -107,6 +109,9 @@ abstract class AbstractCRUDController extends Controller
     public function editAction(Request $request, $id)
     {
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy(['id' => $id]);
+
+        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
+        
         $deleteForm = $this->createDeleteForm($request, $entity);
         $editForm = $this->createForm($this->entityFormType, $entity);
         $editForm->handleRequest($request);
@@ -118,14 +123,13 @@ abstract class AbstractCRUDController extends Controller
             return $this->redirectToRoute($this->getCrudRoute('edit'), array('id' => $entity->getId()));
         }
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:edit.html.twig', array(
-            'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),       
-            'current_route' => $this->getCurrentRouteName($request),            
-            'routes' => $this->getCrudRoutes(),            
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render('MadrakIOEasyAdminBundle:CRUD:edit.html.twig',
+            $this->getCrudViewParameters($request) + 
+                [
+                    'entity' => $entity,
+                    'edit_form' => $editForm->createView(),
+                    'delete_form' => $deleteForm->createView(),
+                ]);
     }
 
     /**
@@ -137,6 +141,9 @@ abstract class AbstractCRUDController extends Controller
     public function deleteAction(Request $request, $id)
     {
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy(['id' => $id]);
+
+        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::DELETE, $entity);
+        
         $form = $this->createDeleteForm($request, $entity);
         $form->handleRequest($request);
 
@@ -149,21 +156,13 @@ abstract class AbstractCRUDController extends Controller
     }
 
     /**
-     * Creates a form to delete an entity.
-     *
-     * @param $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * Get entity class
      */
-    protected function createDeleteForm(Request $request, $entity)
+    public function getEntityClass()
     {
-        return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
-            ->setAction($this->generateUrl($this->getCrudRoute('delete'), array('id' => $entity->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        return $this->entityClass;
     }
-    
+
     /**
      * Get user friendly entity name
      */
@@ -205,6 +204,40 @@ abstract class AbstractCRUDController extends Controller
     public function getCrudRoute($routeType)
     {
         return $this->getCrudRoutes()[$routeType];
+    }    
+    
+    /**
+     * Creates a form to delete an entity.
+     *
+     * @param $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    protected function createDeleteForm(Request $request, $entity)
+    {
+        if ($this->isGranted(EasyAdminVoterInterface::DELETE, $entity) === true) {
+            return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
+                ->setAction($this->generateUrl($this->getCrudRoute('delete'), array('id' => $entity->getId())))
+                ->setMethod('DELETE')
+                ->getForm();            
+        }
+        
+        return null;
+    }
+
+    /**
+     * Gets the parameters that are used in every CRUD view
+     *
+     * @return array
+     */
+    protected function getCrudViewParameters(Request $request)
+    {
+        return [
+                    'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
+                    'current_route' => $this->getCurrentRouteName($request),                        
+                    'routes' => $this->getCrudRoutes(),            
+                    'check_grants' => $this->getParameter('madrak_io_easy_admin.check_grants'),
+                ];
     }
     
     /**
@@ -214,5 +247,26 @@ abstract class AbstractCRUDController extends Controller
     {
         return $this->router->matchRequest($request)['_route'];
     }
-}
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function isGranted($attributes, $object = null)
+    {
+        if ($this->getParameter('madrak_io_easy_admin.check_grants') === true) {
+            return parent::isGranted($attributes, $object);
+        }                
+        
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
+    {
+        if ($this->getParameter('madrak_io_easy_admin.check_grants') === true) {
+            return parent::denyAccessUnlessGranted($attributes, $object, $message);
+        }
+    }    
+}

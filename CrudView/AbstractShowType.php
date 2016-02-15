@@ -2,13 +2,21 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use MadrakIO\Bundle\EasyAdminBundle\EntityManager\EntityManagerInterface;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser;
 
 abstract class AbstractShowType extends AbstractType
 {
+    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, FieldTypeGuesser $fieldTypeGuesser, $entityClass)
+    {
+        $this->templating = $templating;
+        $this->entityManager = $entityManager;
+        $this->fieldTypeGuesser = $fieldTypeGuesser;
+        $this->entityClass = $entityClass;
+    }
+    
     public function createView($entity)
     {
         $this->build();

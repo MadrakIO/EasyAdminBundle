@@ -26,6 +26,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The twig template that should be extended by the CRUD views.')            
                     ->cannotBeEmpty()
                 ->end()
+                ->booleanNode('check_grants')
+                    ->info('If this is set to true, the AbstractCRUDController will use denyAccessUnlessGranted to control access.')
+                    ->cannotBeEmpty()
+                    ->defaultValue(false)
+                ->end()
             ->end();
 
         // Here you should define the parameters that are allowed to
