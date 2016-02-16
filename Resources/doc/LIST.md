@@ -29,7 +29,7 @@ services:
     appbundle.post_list:
         class:  AppBundle\Lists\PostList     
         parent: madrak_io_easy_admin.crud_list_type        
-        arguments: ['App\Bundle\Entity\Post']
+        arguments: ['AppBundle\Entity\Post']
         calls:
             - [setPaginator, ['@knp_paginator']]
 ```
