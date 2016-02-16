@@ -5,7 +5,7 @@ Controller:
 ```php
 <?php
 
-namespace App\Bundle;
+namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use MadrakIO\Bundle\EasyAdminBundle\Controller\AbstractCRUDController;
@@ -13,7 +13,7 @@ use MadrakIO\Bundle\EasyAdminBundle\Controller\AbstractCRUDController;
 /**
  * Post controller.
  *
- * @Route("/post/", service="app_bundle.post_controller")
+ * @Route("/post/", service="appbundle.post_controller")
  */
 class PostController extends AbstractCRUDController
 {
@@ -23,11 +23,10 @@ class PostController extends AbstractCRUDController
 Service:
 ```yaml
 services:
-    app_bundle.post_controller:
-        class:     App\Bundle\PostController
-        arguments: ['@router', '@doctrine.orm.default_entity_manager', '@app_bundle.post_form', '@app_bundle.post_list', '@app_bundle.post_show', 'App\Bundle\Entity\Post']
-        calls:
-            - [ setContainer, [ @service_container ]]
+    appbundle.post_controller:
+        parent: madrak_io_easy_admin.crud_controller
+        class: AppBundle\Controller\PostController
+        arguments: ['@appbundle.post_form', '@appbundle.post_list', '@appbundle.post_show', 'AppBundle\Entity\Post']
 ```
 
 Routing:
@@ -35,5 +34,6 @@ Routing:
 post:
     resource: "@AppBundle/Controller/PostController.php"
     type:     annotation
+    tags:
+        -  { name: madrak_io_easy_admin.crud_controller }            
 ```
-

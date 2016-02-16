@@ -29,6 +29,10 @@ class MadrakIOEasyAdminExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('fieldtype.services.yml');
+        
+        if (class_exists('Knp\Bundle\MenuBundle\KnpMenuBundle') === true) {
+            $loader->load('menu.services.yml');            
+        }
     }
     
     public function getAlias()

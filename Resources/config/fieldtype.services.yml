@@ -7,12 +7,10 @@ services:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\DateFieldType
         tags:
         -  { name: madrak_io_easy_admin.field_type }
-
     madrak_io_easy_admin.date_time_field_type:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\DateTimeFieldType
         tags:
         -  { name: madrak_io_easy_admin.field_type }
-
     madrak_io_easy_admin.text_field_type:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\TextFieldType
         tags:

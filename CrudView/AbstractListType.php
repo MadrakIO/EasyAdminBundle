@@ -2,16 +2,43 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\HttpFoundation\Request;
-use MadrakIO\Bundle\EasyAdminBundle\EntityManager\EntityManagerInterface;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser;
+use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractListType extends AbstractType
 {  
+    protected $entityClass;    
     protected $paginator;
+    protected $checkGrants = true;
 
+    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, $entityClass)
+    {
+        $this->templating = $templating;
+        $this->entityManager = $entityManager;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->fieldTypeGuesser = $fieldTypeGuesser;
+        $this->entityClass = $entityClass;
+    }    
+    
+    public function setCheckGrants($checkGrants)
+    {
+        $this->checkGrants = $checkGrants;
+    }
+    
+    public function isGranted($attributes, $object = null)
+    {
+        if ($this->checkGrants === true) {
+            return $this->authorizationChecker->isGranted($attributes, $object);
+        }
+        
+        return true;
+    }
+    
     public function setPaginator($paginator)
     {
         $this->paginator = $paginator;
@@ -53,6 +80,12 @@ abstract class AbstractListType extends AbstractType
         $accessor = PropertyAccess::createPropertyAccessor();
         
         foreach ($results AS &$result) {
+            if ($this->isGranted(EasyAdminVoterInterface::SHOW, $result) === false) {
+                $result = null;
+            
+                continue;
+            }
+        
             $rowData = [];
             foreach ($this->fields AS $field => &$options) {
                 $currentFieldData = ($accessor->isReadable($result, $field) === true) ? $accessor->getValue($result, $field) : null;

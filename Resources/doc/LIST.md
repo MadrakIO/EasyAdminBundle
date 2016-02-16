@@ -7,7 +7,7 @@ Lists/PostList.php:
 ```php
 <?php
 
-namespace App\Bundle\Lists;
+namespace AppBundle\Lists;
 
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractListType;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\ButtonFieldType;
@@ -26,10 +26,10 @@ class PostList extends AbstractListType
 Service:
 ```yaml
 services:
-    app_bundle.post_list:
-        class:  App\Bundle\Lists\PostList     
-        parent: madrak_io_easy_admin.crud_type        
-        arguments: ['@templating', '@doctrine.orm.default_entity_manager', '@madrak_io_easy_admin.field_type_guesser', 'App\Bundle\Entity\Post']
+    appbundle.post_list:
+        class:  AppBundle\Lists\PostList     
+        parent: madrak_io_easy_admin.crud_list_type        
+        arguments: ['AppBundle\Entity\Post']
         calls:
             - [setPaginator, ['@knp_paginator']]
 ```
