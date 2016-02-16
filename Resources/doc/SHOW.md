@@ -7,7 +7,7 @@ Show/PostShow.php
 ```php
 <?php
 
-namespace App\Bundle\Show;
+namespace AppBundle\Show;
 
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractShowType;
 
@@ -24,8 +24,7 @@ class PostShow extends AbstractShowType
 Service:
 ```yaml
 services:
-    app_bundle.post_show:
-        class:  App\Bundle\Show\PostShow
-        parent: madrak_io_easy_admin.crud_type
-        arguments: ['@templating', '@doctrine.orm.default_entity_manager', '@madrak_io_easy_admin.field_type_guesser', 'App\Bundle\Entity\Post']
+    appbundle.post_show:
+        class:  AppBundle\Show\PostShow
+        parent: madrak_io_easy_admin.crud_show_type
 ```

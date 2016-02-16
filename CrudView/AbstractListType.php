@@ -12,6 +12,7 @@ use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractListType extends AbstractType
 {  
+    protected $entityClass;    
     protected $paginator;
     protected $checkGrants = true;
 

@@ -3,22 +3,24 @@
 {% block content %}
     {% for controller in controllers %} 
         {% if controller.hasCrudRoute('list') == true or controller.hasCrudRoute('create') == true %}
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3>{{ controller.getUserFriendlyEntityName }}</h3>
+            {% if controller.hasCrudRouteAccess('list') == true or controller.hasCrudRouteAccess('create') == true %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>{{ controller.getUserFriendlyEntityName }}</h3>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    {% if controller.hasCrudRoute('list') == true %}
-                        <a href="{{ path(controller.getCrudRoute('list')) }}" class="btn btn-default">List</a>
-                    {% endif %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        {% if controller.hasCrudRoute('list') == true and controller.hasCrudRouteAccess('list') == true %}
+                            <a href="{{ path(controller.getCrudRoute('list')) }}" class="btn btn-default">List</a>
+                        {% endif %}
 
-                    {% if controller.hasCrudRoute('create') == true %}
-                        <a href="{{ path(controller.getCrudRoute('create')) }}" class="btn btn-default">Create</a>
-                    {% endif %}
+                        {% if controller.hasCrudRoute('create') == true and controller.hasCrudRouteAccess('create') == true %}
+                            <a href="{{ path(controller.getCrudRoute('create')) }}" class="btn btn-default">Create</a>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endblock %}

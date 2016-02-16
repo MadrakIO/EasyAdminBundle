@@ -8,7 +8,6 @@ abstract class AbstractType
     protected $templating;
     protected $entityManager;
     protected $fieldTypeGuesser;
-    protected $entityClass;
 
     abstract public function build();
                 

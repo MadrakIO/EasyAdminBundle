@@ -4,7 +4,7 @@
     {% block crud_top_navigation %}
         <div class="col-sm-12 text-right">
             {% block crud_create_button %}
-                {% if routes.create is defined and current_route != routes.create %}
+                {% if routes.create is defined and current_route != routes.create and can_create == true %}
                     <a href="{{ path(routes.create) }}" class="btn btn-primary">Create</a>
                 {% endif %}
             {% endblock %}

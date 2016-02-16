@@ -4,10 +4,10 @@ namespace MadrakIO\Bundle\EasyAdminBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
@@ -17,23 +17,29 @@ use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractCRUDController extends Controller
 {
-    protected $router;
     protected $entityManager;
     protected $entityFormType;
     protected $entityList;
     protected $entityShow;
     protected $entityClass;
     
-    public function __construct(Router $router, EntityManagerInterface $entityManager, AbstractType $entityFormType, AbstractListType $entityList, AbstractShowType $entityShow, $entityClass)
+    public function __construct(AbstractType $entityFormType, AbstractListType $entityList, AbstractShowType $entityShow, $entityClass)
     {
-        $this->router = $router;
-        $this->entityManager = $entityManager;
         $this->entityFormType = $entityFormType;
         $this->entityList = $entityList;
         $this->entityShow = $entityShow;
         $this->entityClass = $entityClass;
     }
 
+    /**
+     * {@inheritDoc}
+     */    
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $this->entityManager = $container->get('doctrine.orm.default_entity_manager');
+    }    
+    
     /**
      * Lists all entities.
      *
@@ -199,6 +205,34 @@ abstract class AbstractCRUDController extends Controller
     }
     
     /**
+     * Check if the controller has the specified crud route
+     */
+    public function hasCrudRouteAccess($routeType, $object = null)
+    {
+        if ($this->hasCrudRoute($routeType) === false) {
+            return false;
+        }
+        
+        if (is_null($object) === true) {
+            $object = $this->getEntityClass();
+        }
+        
+        switch ($routeType) {
+            case 'create':
+                return $this->isGranted(EasyAdminVoterInterface::CREATE, $object);
+            case 'show':
+            case 'list':
+                return $this->isGranted(EasyAdminVoterInterface::SHOW, $object);
+            case 'edit':
+                return $this->isGranted(EasyAdminVoterInterface::EDIT, $object);
+            case 'delete':
+                return $this->isGranted(EasyAdminVoterInterface::DELETE, $object);
+        }
+        
+        return false;
+    }
+    
+    /**
      * Gets a specific related route based on the current route
      */    
     public function getCrudRoute($routeType)
@@ -237,6 +271,7 @@ abstract class AbstractCRUDController extends Controller
                     'current_route' => $this->getCurrentRouteName($request),                        
                     'routes' => $this->getCrudRoutes(),            
                     'check_grants' => $this->getParameter('madrak_io_easy_admin.check_grants'),
+                    'can_create' => $this->hasCrudRouteAccess('create'),
                 ];
     }
     
@@ -245,7 +280,7 @@ abstract class AbstractCRUDController extends Controller
      */    
     protected function getCurrentRouteName(Request $request)
     {
-        return $this->router->matchRequest($request)['_route'];
+        return $this->get('router')->matchRequest($request)['_route'];
     }
 
     /**

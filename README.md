@@ -58,3 +58,5 @@ Step 3: Use the bundle
 [Creating a Show View](https://github.com/MadrakIO/easy-admin-bundle/blob/master/Resources/doc/SHOW.md)
 
 [Creating a Controller](https://github.com/MadrakIO/easy-admin-bundle/blob/master/Resources/doc/CONTROLLER.md)
+
+[Using the Dashboard Controller](https://github.com/MadrakIO/easy-admin-bundle/blob/master/Resources/doc/DASHBOARD.md)

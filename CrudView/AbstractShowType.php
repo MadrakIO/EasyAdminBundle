@@ -9,12 +9,11 @@ use MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser;
 
 abstract class AbstractShowType extends AbstractType
 {
-    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, FieldTypeGuesser $fieldTypeGuesser, $entityClass)
+    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, FieldTypeGuesser $fieldTypeGuesser)
     {
         $this->templating = $templating;
         $this->entityManager = $entityManager;
         $this->fieldTypeGuesser = $fieldTypeGuesser;
-        $this->entityClass = $entityClass;
     }
     
     public function createView($entity)
