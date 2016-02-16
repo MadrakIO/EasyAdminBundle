@@ -27,6 +27,8 @@ services:
         parent: madrak_io_easy_admin.crud_controller
         class: AppBundle\Controller\PostController
         arguments: ['@appbundle.post_form', '@appbundle.post_list', '@appbundle.post_show', 'AppBundle\Entity\Post']
+        tags:
+            -  { name: madrak_io_easy_admin.crud_controller }            
 ```
 
 Routing:
@@ -34,6 +36,4 @@ Routing:
 post:
     resource: "@AppBundle/Controller/PostController.php"
     type:     annotation
-    tags:
-        -  { name: madrak_io_easy_admin.crud_controller }            
 ```

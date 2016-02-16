@@ -17,7 +17,7 @@ use MadrakIO\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
  *
  * @Route("/dashboard/", service="appbundle.dashboard_controller")
  */
-class PostController extends AbstractDashboardController
+class DashboardController extends AbstractDashboardController
 {
 }
 ```
@@ -30,4 +30,9 @@ services:
         class: AppBundle\Controller\DashboardController
 ```
 
-
+Routing:
+```yaml
+post:
+    resource: "@AppBundle/Controller/DashboardController.php"
+    type:     annotation
+```
