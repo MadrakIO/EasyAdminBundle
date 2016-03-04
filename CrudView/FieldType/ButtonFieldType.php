@@ -2,20 +2,18 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType;
 
-use \DateTime;
-
 class ButtonFieldType extends AbstractFieldType
 {
     public static function getListView()
     {
         return 'MadrakIOEasyAdminBundle:List:button.html.twig';
     }
-    
+
     public static function getShowView()
     {
         return 'MadrakIOEasyAdminBundle:Show:button.html.twig';
     }
-        
+
     public static function getName()
     {
         return 'button';
@@ -27,21 +25,21 @@ class ButtonFieldType extends AbstractFieldType
 
         if (isset($entity) === true) {
             if (isset($options['route'], $options['route']['parameters']) === true) {
-                foreach ($options['route']['parameters'] AS $parameterKey => &$parameterField) {
+                foreach ($options['route']['parameters'] as $parameterKey => &$parameterField) {
                     $parameterField = self::getData($parameterField, $entity);
-                }                
+                }
             } else {
                 $options['route']['parameters']['id'] = self::getData('id', $entity);
             }
         }
-        
+
         return $options;
     }
-    
+
     public function guess($data)
     {
         return false;
-    }    
+    }
 
     public function isSortable()
     {

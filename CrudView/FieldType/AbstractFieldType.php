@@ -15,12 +15,12 @@ abstract class AbstractFieldType
     {
         return 'MadrakIOEasyAdminBundle:Show:default.html.twig';
     }
-    
+
     public static function getName()
     {
-        return null;
+        return;
     }
-    
+
     public static function getDefaultOptions(array $options, $field, $entity = null)
     {
         if (isset($field) === true && isset($options['label']) === false) {
@@ -30,22 +30,22 @@ abstract class AbstractFieldType
         if (isset($field, $entity) === true && isset($options['data']) === false) {
             $options['data'] = static::getData($field, $entity);
         }
-        
+
         return $options;
     }
-    
+
     public static function getData($field, $entity)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
         return ($accessor->isReadable($entity, $field) === true) ? $accessor->getValue($entity, $field) : null;
     }
-    
+
     public function guess($data)
     {
         return false;
     }
-    
+
     public function isSortable()
     {
         return true;

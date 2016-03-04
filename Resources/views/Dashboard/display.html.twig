@@ -1,8 +1,8 @@
 {% extends parent_template %}
 
 {% block content %}
-    {% for controller in controllers %} 
-        {% if controller.hasCrudRouteAccess('list') == true or controller.hasCrudRouteAccess('create') == true %}
+    {% for controller in controllers %}
+        {% if controller.getDashboardRoutes() is not empty %}
             <div class="row">
                 <div class="col-sm-12">
                     <h3>{{ controller.getUserFriendlyEntityName }}</h3>
@@ -10,13 +10,9 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    {% if controller.hasCrudRoute('list') == true and controller.hasCrudRouteAccess('list') == true %}
-                        <a href="{{ path(controller.getCrudRoute('list')) }}" class="btn btn-default">List</a>
-                    {% endif %}
-
-                    {% if controller.hasCrudRoute('create') == true and controller.hasCrudRouteAccess('create') == true %}
-                        <a href="{{ path(controller.getCrudRoute('create')) }}" class="btn btn-default">Create</a>
-                    {% endif %}
+                    {% for route in controller.getDashboardRoutes() %}
+                        <a href="{{ path(route.route) }}" class="btn btn-default">{{ route.title }}</a>
+                    {% endfor %}
                 </div>
             </div>
         {% endif %}

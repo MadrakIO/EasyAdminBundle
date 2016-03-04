@@ -12,16 +12,16 @@ abstract class AbstractDashboardController extends Controller
      * Lists all available CRUD controllers and links to their CREATE and LIST actions.
      *
      * @Route("/")
-     * @Method("GET")     
+     * @Method("GET")
      */
     public function indexAction()
     {
-        $controllers = $this->get('madrak_io_easy_admin.crud_controller_chain')->getCrudControllers();
+        $controllers = $this->get('madrak_io_easy_admin.controller_chain')->getDashboardAwareControllers();
 
-        return $this->render('MadrakIOEasyAdminBundle:Dashboard:display.html.twig', 
+        return $this->render('MadrakIOEasyAdminBundle:Dashboard:display.html.twig',
                                 [
                                     'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-                                    'controllers' => $controllers
+                                    'controllers' => $controllers,
                                 ]);
     }
 }

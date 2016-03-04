@@ -2,7 +2,7 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType;
 
-use \DateTime;
+use DateTime;
 
 class DateFieldType extends AbstractFieldType
 {
@@ -10,12 +10,12 @@ class DateFieldType extends AbstractFieldType
     {
         return 'MadrakIOEasyAdminBundle:List:date.html.twig';
     }
-    
+
     public static function getShowView()
     {
         return 'MadrakIOEasyAdminBundle:Show:date.html.twig';
     }
-        
+
     public static function getName()
     {
         return 'date';
@@ -23,6 +23,6 @@ class DateFieldType extends AbstractFieldType
 
     public function guess($data)
     {
-        return ($data instanceOf DateTime);
+        return $data instanceof DateTime;
     }
 }

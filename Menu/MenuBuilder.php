@@ -4,29 +4,27 @@ namespace MadrakIO\Bundle\EasyAdminBundle\Menu;
 
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Knp\Menu\FactoryInterface;
-use MadrakIO\Bundle\EasyAdminBundle\Chain\CrudControllerChain;
-use MadrakIO\Bundle\EasyAdminBundle\Controller\AbstractCRUDController;
-use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
+use MadrakIO\Bundle\EasyAdminBundle\Chain\ControllerChain;
 
 class MenuBuilder
 {
     protected $factory;
     protected $authorizationChecker;
-    protected $crudControllerChain;
+    protected $controllerChain;
     protected $checkGrants;
-    
+
     /**
-     * @param FactoryInterface $factory
-     * @param AuthorizationChecker $authorizationChecker
-     * @param CrudControllerChain $crudControllerChain
+     * @param FactoryInterface         $factory
+     * @param AuthorizationChecker     $authorizationChecker
+     * @param MenuAwareControllerChain $menuAwareControllerChain
      *
      * Add any other dependency you need
      */
-    public function __construct(FactoryInterface $factory, AuthorizationChecker $authorizationChecker, CrudControllerChain $crudControllerChain, $checkGrants)
+    public function __construct(FactoryInterface $factory, AuthorizationChecker $authorizationChecker, ControllerChain $controllerChain, $checkGrants)
     {
         $this->factory = $factory;
         $this->authorizationChecker = $authorizationChecker;
-        $this->crudControllerChain = $crudControllerChain;
+        $this->controllerChain = $controllerChain;
         $this->checkGrants = $checkGrants;
     }
 
@@ -34,21 +32,12 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
 
-        foreach ($this->crudControllerChain->getCrudControllers() AS $crudController) {
-            if ($crudController->hasCrudRoute('list') === true && $this->isGranted($crudController) === true) {
-                $menu->addChild('Manage ' . $crudController->getUserFriendlyEntityName(), array('route' => $crudController->getCrudRoute('list')));            
+        foreach ($this->controllerChain->getMenuAwareControllers() as $menuAwareController) {
+            foreach ($menuAwareController->getMenuRoutes() as $menuRoute) {
+                $menu->addChild($menuRoute['title'], ['route' => $menuRoute['route']]);
             }
         }
 
         return $menu;
-    }
-    
-    public function isGranted(AbstractCRUDController $crudController)
-    {
-        if ($this->checkGrants === true) {
-            return $this->authorizationChecker->isGranted(EasyAdminVoterInterface::MENU, $crudController->getEntityClass());
-        }
-        
-        return true;
     }
 }

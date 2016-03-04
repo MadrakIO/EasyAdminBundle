@@ -10,11 +10,11 @@ abstract class AbstractType
     protected $fieldTypeGuesser;
 
     abstract public function build();
-                
+
     public function add($field, $type = null, array $options = [])
     {
         $this->fields[$field] = $options + ['type' => $type];
-        
+
         return $this;
     }
 }
