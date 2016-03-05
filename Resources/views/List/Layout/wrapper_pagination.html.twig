@@ -1,33 +1,24 @@
-<table class="table table-bordered">
-    <thead>
-        {% for fieldKey, field in crud_list_data_header %}
-            {% if field.type.isSortable == true %}
-                <th{% if crud_list_data_rows.isSorted('entity.' ~ fieldKey) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(crud_list_data_rows, field.label, 'entity.' ~ fieldKey) }}</th>            
-            {% else %}
-                <th>{{ field.label }}</th>
-            {% endif %}
-        {% endfor %}
-    </thead>
-    <tbody class="table-striped">
-        {% for row in crud_list_data_rows %}
-            <tr>
-                {% for field in row %}
-                    {{ list_row(field) }}
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% extends 'MadrakIOEasyAdminBundle:List:Layout/wrapper.html.twig' %}
 
-<div class="pull-right">
-    <div class="row">
-        <div class="col-md-12">
-            {{ knp_pagination_render(crud_list_data_rows) }}
+{% block crud_list_table_head_cell %}
+    {% if field.type.isSortable == true %}
+        <th{% if crud_list_data_rows.isSorted('entity.' ~ fieldKey) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(crud_list_data_rows, field.label, 'entity.' ~ fieldKey) }}</th>
+    {% else %}
+        <th>{{ field.label }}</th>
+    {% endif %}
+{% endblock %}
+
+{% block crud_list_table_footer %}
+    <div class="pull-right">
+        <div class="row">
+            <div class="col-md-12">
+                {{ knp_pagination_render(crud_list_data_rows) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <small>Total Items: {{ crud_list_data_rows.getTotalItemCount }}</small>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <small>Total Items: {{ crud_list_data_rows.getTotalItemCount }}</small>
-        </div>
-    </div>
-</div>
+{% endblock %}
