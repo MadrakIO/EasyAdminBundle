@@ -2,6 +2,7 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\Controller;
 
+use \Exception;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,19 @@ use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractCRUDController extends Controller implements DashboardAwareControllerInterface, MenuAwareControllerInterface, CrudControllerInterface
 {
+    const MISSING_CRUD_VIEW = 'The CRUD view for the specified action (%s) does not exist.';
+
     protected $entityManager;
     protected $entityFormType;
     protected $entityList;
     protected $entityShow;
     protected $entityClass;
+    protected $crudViews = [
+                                'list' => 'MadrakIOEasyAdminBundle:CRUD:list.html.twig',
+                                'create' => 'MadrakIOEasyAdminBundle:CRUD:create.html.twig',
+                                'show' => 'MadrakIOEasyAdminBundle:CRUD:show.html.twig',
+                                'edit' => 'MadrakIOEasyAdminBundle:CRUD:edit.html.twig',
+                            ];
 
     public function __construct(AbstractType $entityFormType, AbstractListType $entityList, AbstractShowType $entityShow, $entityClass)
     {
@@ -40,6 +49,21 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
     }
 
     /**
+     * Set a CRUD view.
+     *
+     * @param string $action
+     * @param string $view
+     *
+     * @return AbstractCRUDController
+     */
+    public function setCrudView($action, $view)
+    {
+        $this->crudViews[$action] = $view;
+
+        return $this;
+    }
+
+    /**
      * Lists all entities.
      *
      * @Route("/")
@@ -47,7 +71,7 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
      */
     public function listAction(Request $request)
     {
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:list.html.twig',
+        return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) + ['listView' => $this->entityList->createView($request)]
         );
     }
@@ -74,7 +98,7 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
             return $this->redirectToRoute($this->getCrudRoute('show'), array('id' => $entity->getId()));
         }
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:create.html.twig',
+        return $this->render($this->getCrudView('create'),
             $this->getCrudViewParameters($request) +
                 [
                     'entity' => $entity,
@@ -96,7 +120,7 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
 
         $deleteForm = $this->createDeleteForm($request, $entity);
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:show.html.twig',
+        return $this->render($this->getCrudView('show'),
             $this->getCrudViewParameters($request) +
                 [
                     'entity' => $entity,
@@ -128,7 +152,7 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
             return $this->redirectToRoute($this->getCrudRoute('edit'), array('id' => $entity->getId()));
         }
 
-        return $this->render('MadrakIOEasyAdminBundle:CRUD:edit.html.twig',
+        return $this->render($this->getCrudView('edit'),
             $this->getCrudViewParameters($request) +
                 [
                     'entity' => $entity,
@@ -267,6 +291,22 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
         }
 
         return $routes;
+    }
+
+    /**
+     * Returns the CRUD view based on the action.
+     *
+     * @param string $action
+     *
+     * @return string $view
+     */
+    protected function getCrudView($action)
+    {
+        if (isset($this->crudViews[$action]) === false) {
+            throw new Exception(vsprintf(self::MISSING_CRUD_VIEW, [$action]));
+        }
+
+        return $this->crudViews[$action];
     }
 
     /**
