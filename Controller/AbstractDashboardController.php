@@ -26,7 +26,19 @@ abstract class AbstractDashboardController extends Controller
         return $this->render('MadrakIOEasyAdminBundle:Dashboard:display.html.twig',
                                 [
                                     'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-                                    'controllerGroups' => $controllerGroups,
+                                    'controllerGroups' => $this->sortControllerGroups($controllerGroups),
                                 ]);
+    }
+
+    /**
+     * Returns a sorted controller group array
+     *
+     * @return array
+     */
+    protected function sortControllerGroups(array $controllerGroups)
+    {
+        ksort($controllerGroups);
+
+        return $controllerGroups;
     }
 }
