@@ -16,12 +16,17 @@ abstract class AbstractDashboardController extends Controller
      */
     public function indexAction()
     {
-        $controllers = $this->get('madrak_io_easy_admin.controller_chain')->getDashboardAwareControllers();
+        $controllerGroups = [];
+        foreach ($this->get('madrak_io_easy_admin.controller_chain')->getDashboardAwareControllers() AS $controller) {
+            if (count($controller->getDashboardRoutes()) > 0) {
+                $controllerGroups[$controller->getDashboardGroupName()][] = $controller;
+            }
+        }
 
         return $this->render('MadrakIOEasyAdminBundle:Dashboard:display.html.twig',
                                 [
                                     'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
-                                    'controllers' => $controllers,
+                                    'controllerGroups' => $controllerGroups,
                                 ]);
     }
 }

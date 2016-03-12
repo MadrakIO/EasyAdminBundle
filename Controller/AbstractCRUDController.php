@@ -368,6 +368,14 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getDashboardGroupName()
+    {
+        return $this->getUserFriendlyEntityName();
+    }
+
+    /**
      * Gets the current route.
      */
     protected function getCurrentRouteName(Request $request)
