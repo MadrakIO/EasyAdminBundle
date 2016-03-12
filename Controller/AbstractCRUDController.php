@@ -24,6 +24,7 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
     protected $entityList;
     protected $entityShow;
     protected $entityClass;
+    protected $menuIcon;
     protected $crudViews = [
                                 'list' => 'MadrakIOEasyAdminBundle:CRUD:list.html.twig',
                                 'create' => 'MadrakIOEasyAdminBundle:CRUD:create.html.twig',
@@ -342,6 +343,28 @@ abstract class AbstractCRUDController extends Controller implements DashboardAwa
                     'check_grants' => $this->getParameter('madrak_io_easy_admin.check_grants'),
                     'can_create' => $this->hasCrudRouteAccess('create'),
                 ];
+    }
+
+    /**
+     * Sets the menu icon, used in the service declaration
+     *
+     * @param string $menuIcon
+     *
+     * @return AbstractCRUDController
+     */
+    public function setMenuIcon($menuIcon)
+    {
+        $this->menuIcon = $menuIcon;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMenuIcon()
+    {
+        return $this->menuIcon;
     }
 
     /**

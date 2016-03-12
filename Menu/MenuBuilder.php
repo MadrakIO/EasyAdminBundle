@@ -34,7 +34,7 @@ class MenuBuilder
 
         foreach ($this->controllerChain->getMenuAwareControllers() as $menuAwareController) {
             foreach ($menuAwareController->getMenuRoutes() as $menuRoute) {
-                $menu->addChild($menuRoute['title'], ['route' => $menuRoute['route']]);
+                $menu->addChild($menuRoute['title'], ['route' => $menuRoute['route'], 'linkAttributes' => ['icon' => $menuAwareController->getMenuIcon()]]);
             }
         }
 
