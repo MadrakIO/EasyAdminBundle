@@ -3,4 +3,4 @@ services:
         class: MadrakIO\Bundle\EasyAdminBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory", "@security.authorization_checker", "@madrak_io_easy_admin.controller_chain", "%madrak_io_easy_admin.check_grants%"]
         tags:
-            - { name: knp_menu.menu_builder, method: createCrudMenu, alias: madrak_io_easy_admin_crud_menu }
+            - { name: knp_menu.menu_builder, method: createAdminMenu, alias: madrak_io_easy_admin_crud_menu }

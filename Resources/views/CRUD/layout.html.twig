@@ -40,8 +40,10 @@
                     <a href="{{ path(routes.list) }}" class="btn btn-default">List</a>
                 {% endif %}
             {% endblock %}
+
+            {% block crud_extra_buttons %}{% endblock %}
         </div>
     {% endblock %}
-    
+
     {% block crud_content %}{% endblock %}
 {% endblock %}

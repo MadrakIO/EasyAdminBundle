@@ -28,7 +28,7 @@ class MenuBuilder
         $this->checkGrants = $checkGrants;
     }
 
-    public function createCrudMenu(array $options)
+    public function createAdminMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
 
