@@ -49,19 +49,24 @@ abstract class AbstractListType extends AbstractType
         return $this->paginator instanceof \Knp\Component\Pager\Paginator;
     }
 
-    public function createView(Request $request)
+    public function createView(Request $request, array $criteria = [])
     {
         $this->build();
-        $data = $this->getDataList($request);
+        $data = $this->getDataList($request, $criteria);
 
         return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data]);
     }
 
-    private function getDataList(Request $request)
+    protected function createQueryBuilder(Request $request, array $criteria)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('entity')
-                     ->from($this->entityClass, 'entity');
+        return $this->entityManager->createQueryBuilder()
+                                   ->select('entity')
+                                   ->from($this->entityClass, 'entity');
+    }
+
+    private function getDataList(Request $request, array $criteria)
+    {
+        $queryBuilder = $this->createQueryBuilder($request, $criteria);
 
         if ($this->hasPaginator() === true) {
             $pagination = $this->paginator->paginate($queryBuilder, $request->query->getInt('page', 1), $request->query->getInt('limit', 10));
