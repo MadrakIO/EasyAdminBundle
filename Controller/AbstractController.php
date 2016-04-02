@@ -44,7 +44,7 @@ abstract class AbstractController extends Controller
     /**
      * Gets the current route parameters.
      *
-     * @return string
+     * @return array
      */
     protected function getCurrentRouteParameters(Request $request)
     {
@@ -61,6 +61,16 @@ abstract class AbstractController extends Controller
 
         return $parameters;
     }
+
+    /**
+     * Gets the current route parameters.
+     *
+     * @return array
+     */
+     protected function getCreateRouteRedirect(Request $request, $entity)
+     {
+         return ['route' => $this->getCrudRoute('show'), 'parameters' => ['id' => $entity->getId()]];
+     }
 
     /**
      * Gets all routes for controller.

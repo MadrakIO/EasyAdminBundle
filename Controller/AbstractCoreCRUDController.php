@@ -83,8 +83,9 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
+            $routeInfo = $this->getCreateRouteRedirect($request, $entity);
 
-            return $this->redirectToRoute($this->getCrudRoute('show'), $this->getCurrentRouteParameters($request));
+            return $this->redirectToRoute($routeInfo['route'], $routeInfo['parameters']);
         }
 
         return $this->render($this->getCrudView('create'),
