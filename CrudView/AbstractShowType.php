@@ -41,7 +41,7 @@ abstract class AbstractShowType extends AbstractType
                 $options['type'] = $this->fieldTypeGuesser->attemptGuess($field, $options['data']);
             }
 
-            $options = $options['type']::getDefaultOptions($options + ['data' => $currentFieldData], $field, $entity);
+            $options = $options['type']::getDefaultOptions($options, $field, $entity);
         }
 
         return $this->fields;
