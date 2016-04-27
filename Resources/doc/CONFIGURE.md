@@ -22,4 +22,4 @@ Enabling Check Grants
 If you've decided to enable ```check_grants```, there are a few things you should know:
 
 * Make sure your Voter implements ```MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface``` and supports the attribute constants specified in that class
-* Make sure your Voters support both an instance of the object and the object's class for both CREATE and MENU (if you're using KNP Menu Bundle). 
+* Make sure your Voters support both an instance of the object and the object's class for both CREATE and MENU (if you're using KNP Menu Bundle).

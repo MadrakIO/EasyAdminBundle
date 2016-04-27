@@ -2,12 +2,11 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView;
 
-use \Twig_Environment;
-use \Twig_SimpleFunction;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig_Environment;
+use Twig_SimpleFunction;
 
 class CrudViewTwigExtension extends \Twig_Extension
-{        
+{
     public function getFunctions()
     {
         return array(
@@ -25,7 +24,7 @@ class CrudViewTwigExtension extends \Twig_Extension
     {
         return $environment->render($field['type']::getShowView(), $field);
     }
-    
+
     public function getName()
     {
         return 'crud_view_twig_extension';

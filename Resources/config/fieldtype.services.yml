@@ -15,4 +15,7 @@ services:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\TextFieldType
         tags:
         -  { name: madrak_io_easy_admin.field_type }
-
+    madrak_io_easy_admin.boolean_field_type:
+        class: MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\BooleanFieldType
+        tags:
+        -  { name: madrak_io_easy_admin.field_type }

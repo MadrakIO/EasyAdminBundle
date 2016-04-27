@@ -16,10 +16,10 @@ class FieldTypeChain
     public function addFieldType(AbstractFieldType $fieldType)
     {
         $this->fieldTypes[] = $fieldType;
-        
+
         return $this;
     }
-    
+
     public function getFieldTypes()
     {
         return $this->fieldTypes;

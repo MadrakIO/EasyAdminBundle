@@ -2,27 +2,25 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType;
 
-use DateTime;
-
-class DateFieldType extends AbstractFieldType
+class BooleanFieldType extends AbstractFieldType
 {
     public static function getListView()
     {
-        return 'MadrakIOEasyAdminBundle:List:date.html.twig';
+        return 'MadrakIOEasyAdminBundle:List:boolean.html.twig';
     }
 
     public static function getShowView()
     {
-        return 'MadrakIOEasyAdminBundle:Show:date.html.twig';
+        return 'MadrakIOEasyAdminBundle:Show:boolean.html.twig';
     }
 
     public static function getName()
     {
-        return 'date';
+        return 'boolean';
     }
 
     public function guess($data)
     {
-        return $data instanceof DateTime;
+        return is_bool($data);
     }
 }

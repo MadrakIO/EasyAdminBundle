@@ -2,7 +2,7 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\Security;
 
-interface EasyAdminVoterInterface 
+interface EasyAdminVoterInterface
 {
     const CREATE = 'CREATE'; // Used by the create action
     const SHOW = 'SHOW'; // Used by the show action and to check items in the list action

@@ -22,19 +22,19 @@ class MadrakIOEasyAdminExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach ($config AS $configKey => $configValue) {
-            $container->setParameter('madrak_io_easy_admin.' . $configKey, $configValue);
-        }                
-        
+        foreach ($config as $configKey => $configValue) {
+            $container->setParameter('madrak_io_easy_admin.'.$configKey, $configValue);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('fieldtype.services.yml');
-        
+
         if (class_exists('Knp\Bundle\MenuBundle\KnpMenuBundle') === true) {
-            $loader->load('menu.services.yml');            
+            $loader->load('menu.services.yml');
         }
     }
-    
+
     public function getAlias()
     {
         return 'madrak_io_easy_admin';

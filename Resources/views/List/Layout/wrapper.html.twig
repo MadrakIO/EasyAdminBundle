@@ -1,16 +1,33 @@
-<table class="table table-bordered">
+<table class="table table-bordered table-striped">
     <thead>
-        {% for fieldKey, field in crud_list_data_header %}
-            <th>{{ field.label }}</th>
-        {% endfor %}
+        <tr>
+            {% for fieldKey, field in crud_list_data_header %}
+                {% block crud_list_table_head_cell %}
+                    <th>{{ field.label }}</th>
+                {% endblock %}
+            {% endfor %}
+        </tr>
     </thead>
-    <tbody class="table-striped">
+    <tbody>
         {% for row in crud_list_data_rows %}
-            <tr>
-                {% for field in row %}
-                    {{ list_row(field) }}
-                {% endfor %}
-            </tr>
+            {% block crud_list_table_data_row %}
+                <tr>
+                    {% for field in row %}
+                        {% block crud_list_data_table_row_cell %}
+                            {{ list_row(field) }}
+                        {% endblock %}
+                    {% endfor %}
+                </tr>
+            {% endblock %}
         {% endfor %}
+        {% if crud_list_data_rows|length == 0 %}
+            {% block crud_list_table_no_data_row %}
+                <tr>
+                    <td colspan="{{ crud_list_data_header|length }}" class="text-center">No data available</td>
+                </tr>
+            {% endblock %}
+        {% endif %}
     </tbody>
 </table>
+
+{% block crud_list_table_footer %}{% endblock %}

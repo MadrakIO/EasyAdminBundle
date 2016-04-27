@@ -6,28 +6,27 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
-class CrudControllerCompilerPass implements CompilerPassInterface
+class ControllerCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if ($container->has('madrak_io_easy_admin.crud_controller_chain') === false) {
+        if ($container->has('madrak_io_easy_admin.controller_chain') === false) {
             return;
         }
 
         $definition = $container->findDefinition(
-            'madrak_io_easy_admin.crud_controller_chain'
+            'madrak_io_easy_admin.controller_chain'
         );
 
         $taggedServices = $container->findTaggedServiceIds(
-            'madrak_io_easy_admin.crud_controller'
+            'madrak_io_easy_admin.controller'
         );
 
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall(
-                'addCrudController',
+                'addController',
                 array(new Reference($id))
             );
         }
     }
 }
-

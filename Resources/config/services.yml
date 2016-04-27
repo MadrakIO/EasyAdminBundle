@@ -9,11 +9,11 @@ services:
     madrak_io_easy_admin.field_type_guesser:
         class: MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser
         arguments: ['@madrak_io_easy_admin.field_type_chain']
-    madrak_io_easy_admin.crud_controller_chain:
-        class: MadrakIO\Bundle\EasyAdminBundle\Chain\CrudControllerChain        
+    madrak_io_easy_admin.controller_chain:
+        class: MadrakIO\Bundle\EasyAdminBundle\Chain\ControllerChain
     madrak_io_easy_admin.crud_list_type:
         abstract: true
-        arguments: 
+        arguments:
             - '@templating'
             - '@doctrine.orm.default_entity_manager'
             - '@security.authorization_checker'
@@ -22,7 +22,7 @@ services:
             - [ setCheckGrants, [ '%madrak_io_easy_admin.check_grants%' ]]
     madrak_io_easy_admin.crud_show_type:
         abstract: true
-        arguments: 
+        arguments:
             - '@templating'
             - '@doctrine.orm.default_entity_manager'
             - '@madrak_io_easy_admin.field_type_guesser'

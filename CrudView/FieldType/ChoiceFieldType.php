@@ -2,27 +2,25 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType;
 
-use DateTime;
-
-class DateFieldType extends AbstractFieldType
+class ChoiceFieldType extends AbstractFieldType
 {
     public static function getListView()
     {
-        return 'MadrakIOEasyAdminBundle:List:date.html.twig';
+        return 'MadrakIOEasyAdminBundle:List:choice.html.twig';
     }
 
     public static function getShowView()
     {
-        return 'MadrakIOEasyAdminBundle:Show:date.html.twig';
+        return 'MadrakIOEasyAdminBundle:Show:choice.html.twig';
     }
 
     public static function getName()
     {
-        return 'date';
+        return 'choice';
     }
 
     public function guess($data)
     {
-        return $data instanceof DateTime;
+        return false;
     }
 }

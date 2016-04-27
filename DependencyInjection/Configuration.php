@@ -19,11 +19,11 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('madrak_io_easy_admin');
-        
+
         $rootNode
             ->children()
                 ->scalarNode('parent_template')
-                    ->info('The twig template that should be extended by the CRUD views.')            
+                    ->info('The twig template that should be extended by the CRUD views.')
                     ->cannotBeEmpty()
                 ->end()
                 ->booleanNode('check_grants')
