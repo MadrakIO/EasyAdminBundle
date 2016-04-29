@@ -28,7 +28,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->booleanNode('check_grants')
                     ->info('If this is set to true, the AbstractCRUDController will use denyAccessUnlessGranted to control access.')
-                    ->cannotBeEmpty()
                     ->defaultValue(false)
                 ->end()
             ->end();
