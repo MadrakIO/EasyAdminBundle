@@ -29,8 +29,8 @@ services:
     madrak_io_easy_admin.crud_controller:
         abstract: true
         calls:
-            - [ setContainer, [ @service_container ]]
+            - [ setContainer, [ "@service_container" ]]
     madrak_io_easy_admin.dashboard_controller:
         abstract: true
         calls:
-            - [ setContainer, [ @service_container ]]
+            - [ setContainer, [ "@service_container" ]]
