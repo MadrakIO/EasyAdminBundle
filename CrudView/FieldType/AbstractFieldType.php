@@ -27,6 +27,14 @@ abstract class AbstractFieldType
             $options['data'] = static::getData($field, $entity);
         }
 
+        if (isset($options['sortable']) === false) {
+            $options['sortable'] = static::isSortable();
+        }
+
+        if (isset($options['received_default_options']) === false) {
+            $options['received_default_options'] = true;
+        }
+
         return $options;
     }
 
@@ -45,5 +53,10 @@ abstract class AbstractFieldType
     public function isSortable()
     {
         return true;
+    }
+
+    public function __toString()
+    {
+        return static::class;
     }
 }

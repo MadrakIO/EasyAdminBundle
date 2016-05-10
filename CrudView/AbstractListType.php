@@ -96,6 +96,9 @@ abstract class AbstractListType extends AbstractType
 
                 if (empty($options['type']) === true) {
                     $options['type'] = $this->fieldTypeGuesser->attemptGuess($field, $currentFieldData);
+                }
+
+                if (empty($options['received_default_options']) === true) {
                     $options = $options['type']::getDefaultOptions($options, $field);
                 }
 
