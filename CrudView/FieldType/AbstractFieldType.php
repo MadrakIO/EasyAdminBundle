@@ -50,7 +50,7 @@ abstract class AbstractFieldType
         return false;
     }
 
-    public function isSortable()
+    public static function isSortable()
     {
         return true;
     }

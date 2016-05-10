@@ -41,7 +41,7 @@ class ButtonFieldType extends AbstractFieldType
         return false;
     }
 
-    public function isSortable()
+    public static function isSortable()
     {
         return false;
     }
