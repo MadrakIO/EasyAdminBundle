@@ -15,7 +15,7 @@ abstract class AbstractListType extends AbstractType
     protected $entityClass;
     protected $paginator;
     protected $checkGrants = true;
-    protected $filters;
+    protected $filters = [];
 
     public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, $entityClass)
     {
@@ -55,7 +55,7 @@ abstract class AbstractListType extends AbstractType
         $this->build();
         $data = $this->getDataList($request, $criteria);
 
-        return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data, 'crud_list_data_filters' => $this->filters]);
+        return $this->templating->render($this->getListWrapperView(), ['crud_list_data_filters' => $this->filters, 'crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data]);
     }
 
     public function addFilter($filter, $type = null, array $options = [])

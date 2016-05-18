@@ -1,0 +1,9 @@
+{% extends 'MadrakIOEasyAdminBundle:CRUD:layout.html.twig' %}
+
+{% block filter_content %}
+    {{ form_start(filter_form) }}
+        {{ form_widget(filter_form) }}
+        <button type="submit" class="btn btn-primary">Filter</button>
+    {{ form_end(filter_form) }}
+{% endblock %}
+
