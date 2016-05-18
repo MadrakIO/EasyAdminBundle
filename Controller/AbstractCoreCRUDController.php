@@ -57,16 +57,9 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderList(Request $request, array $criteria = [])
     {
-        $entity = new $this->entityClass();
-        $filterForm = $this->createFilterForm($request, $entity);
-
         return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) +
-            $this->getCrudViewRouteParameters($request) +
-                [
-                    'listView' => $this->entityList->createView($request, $criteria),
-                    'filter_form' => $filterForm->createView()
-                ]);
+            $this->getCrudViewRouteParameters($request) + ['listView' => $this->entityList->createView($request, $criteria)]);
     }
 
     /**
@@ -280,26 +273,6 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
                 ->setAction($this->generateUrl($this->getCrudRoute('delete'), $this->getCurrentRouteParameters($request)))
                 ->setMethod('DELETE')
-                ->getForm();
-        }
-
-        return;
-    }
-
-    /**
-     * Creates a form to delete an entity.
-     *
-     * @param Request $request
-     * @param $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    protected function createFilterForm(Request $request, $entity)
-    {
-        if ($this->isGranted(EasyAdminVoterInterface::SHOW, $entity) === true) {
-            return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
-                ->setAction($this->generateUrl($this->getCrudRoute('list'), $this->getCurrentRouteParameters($request)))
-                ->setMethod('LIST')
                 ->getForm();
         }
 
