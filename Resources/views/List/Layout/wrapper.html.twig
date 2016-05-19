@@ -1,3 +1,10 @@
+{% if filter_form is defined %}
+    {{ form_start(filter_form) }}
+        {{ form_widget(filter_form) }}
+        <button type="submit" class="btn btn-primary">Filter</button>
+    {{ form_end(filter_form) }}
+{% endif %}
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
