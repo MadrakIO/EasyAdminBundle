@@ -31,10 +31,7 @@ abstract class AbstractFilterableListType extends AbstractListType
 
     public function generateFilterOptions($field, $type, array $options)
     {
-        if (isset($options['required']) === false) {
-            $options['required'] = false;
-        }
-
+        $options['required'] = false;
         $label = FieldTypeLabeler::generateLabel($field);
 
         return array('type' => $type, 'label' => $label, 'options' => $options);
