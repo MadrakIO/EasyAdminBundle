@@ -7,7 +7,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactory;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Labeler\FieldTypeLabeler;
 use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
@@ -18,14 +18,14 @@ abstract class AbstractListType extends AbstractType
     protected $paginator;
     protected $checkGrants = true;
 
-    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, ContainerInterface $container, $entityClass)
+    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, FormFactory $formFactory, $entityClass)
     {
         $this->templating = $templating;
         $this->entityManager = $entityManager;
         $this->authorizationChecker = $authorizationChecker;
         $this->fieldTypeGuesser = $fieldTypeGuesser;
         $this->entityClass = $entityClass;
-        $this->container = $container;
+        $this->formFactory = $formFactory;
     }
 
     public function setCheckGrants($checkGrants)
@@ -60,42 +60,11 @@ abstract class AbstractListType extends AbstractType
         return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data]);
     }
 
-    public function addFilter($filter, $type = null, array $options = [])
-    {
-        $this->filters[$filter] = $this->generateFilterOptions($filter, $type, $options);
-
-        return $this;
-    }
-
-    public function generateFilterOptions($field, $type, array $options)
-    {
-        if (isset($options['required']) === false) {
-            $options['required'] = false;
-        }
-
-        $label = FieldTypeLabeler::generateLabel($field);
-
-        return array('type' => $type, 'label' => $label, 'options' => $options);
-    }
-
     protected function createQueryBuilder(Request $request, array $criteria)
     {
         return $this->entityManager->createQueryBuilder()
                                    ->select('entity')
                                    ->from($this->entityClass, 'entity');
-    }
-
-    protected function createFilterForm(Request $request, $entity)
-    {
-        $formFactory = $this->container->get('form.factory')
-            ->createBuilder(FormType::class)
-            ->setMethod('GET');
-
-        foreach ($this->filters as $key => $filterField) {
-            $formFactory->add($key, $filterField['type'], $filterField['options']);
-        }
-
-        return $formFactory->getForm();
     }
 
     protected function getDataList(Request $request, array $criteria)

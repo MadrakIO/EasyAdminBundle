@@ -18,7 +18,7 @@ services:
             - '@doctrine.orm.default_entity_manager'
             - '@security.authorization_checker'
             - '@madrak_io_easy_admin.field_type_guesser'
-            - '@service_container'
+            - '@form.factory'
         calls:
             - [ setCheckGrants, [ '%madrak_io_easy_admin.check_grants%' ]]
     madrak_io_easy_admin.crud_show_type:

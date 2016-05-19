@@ -42,14 +42,13 @@ abstract class AbstractFilterableListType extends AbstractListType
 
     protected function createFilterForm(Request $request, $entity)
     {
-        $formFactory = $this->container->get('form.factory')
-            ->createBuilder(FormType::class)
+        $form = $this->formFactory->createBuilder(FormType::class)
             ->setMethod('GET');
 
         foreach ($this->filters as $key => $filterField) {
-            $formFactory->add($key, $filterField['type'], $filterField['options']);
+            $form->add($key, $filterField['type'], $filterField['options']);
         }
 
-        return $formFactory->getForm();
+        return $form->getForm();
     }
 }
