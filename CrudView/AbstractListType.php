@@ -7,7 +7,9 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactory;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Guesser\FieldTypeGuesser;
+use MadrakIO\Bundle\EasyAdminBundle\CrudView\Labeler\FieldTypeLabeler;
 use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractListType extends AbstractType
@@ -16,13 +18,14 @@ abstract class AbstractListType extends AbstractType
     protected $paginator;
     protected $checkGrants = true;
 
-    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, $entityClass)
+    public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, FormFactory $formFactory, $entityClass)
     {
         $this->templating = $templating;
         $this->entityManager = $entityManager;
         $this->authorizationChecker = $authorizationChecker;
         $this->fieldTypeGuesser = $fieldTypeGuesser;
         $this->entityClass = $entityClass;
+        $this->formFactory = $formFactory;
     }
 
     public function setCheckGrants($checkGrants)
@@ -64,7 +67,7 @@ abstract class AbstractListType extends AbstractType
                                    ->from($this->entityClass, 'entity');
     }
 
-    private function getDataList(Request $request, array $criteria)
+    protected function getDataList(Request $request, array $criteria)
     {
         $queryBuilder = $this->createQueryBuilder($request, $criteria);
 
@@ -79,7 +82,7 @@ abstract class AbstractListType extends AbstractType
         return $this->getData($queryBuilder->getQuery()->getResult());
     }
 
-    private function getData($results)
+    protected function getData($results)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -111,7 +114,7 @@ abstract class AbstractListType extends AbstractType
         return $results;
     }
 
-    private function getListWrapperView()
+    protected function getListWrapperView()
     {
         if ($this->hasPaginator() === true) {
             return 'MadrakIOEasyAdminBundle:List:Layout/wrapper_pagination.html.twig';
