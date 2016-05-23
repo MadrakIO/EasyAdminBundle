@@ -2,46 +2,54 @@
 
 {% block content %}
     {% block crud_top_navigation %}
-        <div class="col-sm-12 text-right">
-            {% block crud_create_button %}
-                {% if generated_routes.create is defined and current_route != routes.create and can_create == true %}
-                    <a href="{{ generated_routes.create }}" class="btn btn-primary">Create</a>
-                {% endif %}
-            {% endblock %}
-
-            {% block crud_edit_button %}
-                {% if generated_routes.edit is defined and entity is defined and entity.id is not empty and current_route != routes.edit %}
-                    {% if check_grants == false or check_grants == true and is_granted('EDIT', entity) == true %}
-                        <a href="{{ generated_routes.edit }}" class="btn btn-warning">Edit</a>
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                {% block crud_filters_button %}
+                    {% if current_route == routes.list and list_is_filterable == true %}
+                        <a href="#filterForm" data-toggle="collapse" class="btn btn-primary">Show/hide filter fields</a>
                     {% endif %}
-                {% endif %}
-            {% endblock %}
+                {% endblock %}
 
-            {% block crud_show_button %}
-                {% if generated_routes.show is defined and entity is defined and entity.id is not empty and current_route != routes.show  %}
-                    {% if check_grants == false or check_grants == true and is_granted('SHOW', entity) == true %}
-                        <a href="{{ generated_routes.show }}" class="btn btn-info">Show</a>
+                {% block crud_create_button %}
+                    {% if generated_routes.create is defined and current_route != routes.create and can_create == true %}
+                        <a href="{{ generated_routes.create }}" class="btn btn-primary">Create</a>
                     {% endif %}
-                {% endif %}
-            {% endblock %}
+                {% endblock %}
 
-            {% block crud_delete_button %}
-                {% if routes.delete is defined and delete_form is defined %}
-                    {% if check_grants == false or check_grants == true and is_granted('DELETE', entity) == true %}
-                        {{ form_start(delete_form) }}
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        {{ form_end(delete_form) }}
+                {% block crud_edit_button %}
+                    {% if generated_routes.edit is defined and entity is defined and entity.id is not empty and current_route != routes.edit %}
+                        {% if check_grants == false or check_grants == true and is_granted('EDIT', entity) == true %}
+                            <a href="{{ generated_routes.edit }}" class="btn btn-warning">Edit</a>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-            {% endblock %}
+                {% endblock %}
 
-            {% block crud_list_button %}
-                {% if generated_routes.list is defined and current_route != routes.list %}
-                    <a href="{{ generated_routes.list }}" class="btn btn-default">List</a>
-                {% endif %}
-            {% endblock %}
+                {% block crud_show_button %}
+                    {% if generated_routes.show is defined and entity is defined and entity.id is not empty and current_route != routes.show  %}
+                        {% if check_grants == false or check_grants == true and is_granted('SHOW', entity) == true %}
+                            <a href="{{ generated_routes.show }}" class="btn btn-info">Show</a>
+                        {% endif %}
+                    {% endif %}
+                {% endblock %}
 
-            {% block crud_extra_buttons %}{% endblock %}
+                {% block crud_delete_button %}
+                    {% if routes.delete is defined and delete_form is defined %}
+                        {% if check_grants == false or check_grants == true and is_granted('DELETE', entity) == true %}
+                            {{ form_start(delete_form) }}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            {{ form_end(delete_form) }}
+                        {% endif %}
+                    {% endif %}
+                {% endblock %}
+
+                {% block crud_list_button %}
+                    {% if generated_routes.list is defined and current_route != routes.list %}
+                        <a href="{{ generated_routes.list }}" class="btn btn-default">List</a>
+                    {% endif %}
+                {% endblock %}
+
+                {% block crud_extra_buttons %}{% endblock %}
+            </div>
         </div>
     {% endblock %}
 

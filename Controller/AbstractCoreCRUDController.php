@@ -60,8 +60,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
-                ['listView' => $this->entityList->createView($request, $criteria)]
-        );
+                [
+                    'listView' => $this->entityList->createView($request, $criteria),
+                    'list_is_filterable' => $this->entityList->isFilterable()
+                ]);
     }
 
     /**
