@@ -48,4 +48,24 @@ abstract class AbstractFilterableListType extends AbstractListType
 
         return $form->getForm();
     }
+
+    protected function createQueryBuilder(Request $request, array $criteria)
+    {
+        $params = $request->query->get('form');
+
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+                                            ->select('entity')
+                                            ->from($this->entityClass, 'entity');
+
+        if (isset($params)) {
+            foreach ($params as $param => $value) {
+                if (empty($value) === false and $param != '_token') {
+                    $queryBuilder->where(sprintf('entity.%s = :%s', $param, $param))
+                                 ->setParameter($param, $value);
+                }
+            }
+        }
+
+        return $queryBuilder;
+    }
 }
