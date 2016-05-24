@@ -42,6 +42,11 @@ abstract class AbstractListType extends AbstractType
         return true;
     }
 
+    public function isFilterable()
+    {
+        return $this instanceOf AbstractFilterableListType;
+    }
+
     public function setPaginator($paginator)
     {
         $this->paginator = $paginator;

@@ -1,7 +1,7 @@
 {% extends 'MadrakIOEasyAdminBundle:List:Layout/wrapper.html.twig' %}
 
 {% block crud_list_table_head_cell %}
-    {% if field.sortable == true %}
+    {% if field.sortable is defined and field.sortable == true %}
         <th{% if crud_list_data_rows.isSorted('entity.' ~ fieldKey) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(crud_list_data_rows, field.label, 'entity.' ~ fieldKey) }}</th>
     {% else %}
         <th>{{ field.label }}</th>

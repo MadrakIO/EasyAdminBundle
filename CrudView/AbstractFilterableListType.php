@@ -16,7 +16,6 @@ abstract class AbstractFilterableListType extends AbstractListType
     {
         $this->build();
         $data = $this->getDataList($request, $criteria);
-        $entity = new $this->entityClass();
         $filterForm = $this->createFilterForm($request, $entity);
 
         return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data, 'filter_form' => $filterForm->createView()]);
@@ -37,7 +36,7 @@ abstract class AbstractFilterableListType extends AbstractListType
         return array('type' => $type, 'label' => $label, 'options' => $options);
     }
 
-    protected function createFilterForm(Request $request, $entity)
+    protected function createFilterForm(Request $request)
     {
         $form = $this->formFactory->createBuilder(FormType::class)
             ->setMethod('GET');
@@ -47,5 +46,34 @@ abstract class AbstractFilterableListType extends AbstractListType
         }
 
         return $form->getForm();
+    }
+
+    protected function createQueryBuilder(Request $request, array $criteria)
+    {
+        $form = $this->createFilterForm($request);
+        $form->handleRequest($request);
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+                                            ->select('entity')
+                                            ->from($this->entityClass, 'entity');
+
+        if ($form->isSubmitted() === true && $form->isValid() === true) {
+            $firstLoop = true;
+            foreach ($form->getData() AS $fieldKey => $value) {
+                if (empty($value) === true) {
+                    continue;
+                }
+
+                $whereMethod = 'andWhere';
+                if ($firstLoop === true) {
+                    $whereMethod = 'where';
+                    $firstLoop = false;
+                }
+
+                $queryBuilder->$whereMethod(sprintf('entity.%s = :%s', $fieldKey, $fieldKey))
+                             ->setParameter($fieldKey, $value);
+            }
+        }
+
+        return $queryBuilder;
     }
 }
