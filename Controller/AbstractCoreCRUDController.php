@@ -6,6 +6,7 @@ use \Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractShowType;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractListType;
 use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
@@ -183,6 +184,39 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         }
 
         return $this->redirectToRoute($this->getCrudRoute('list'), $this->getCurrentRouteParameters($request));
+    }
+
+    /**
+     * Export csv with entities.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function handleCsv(Request $request, array $criteria = [])
+    {
+        $response = new StreamedResponse();
+        $response->setCallback(function() {
+            $handle = fopen('php://output', 'w+');
+
+            $results = $this->entityList->createQueryBuilder($request, $criteria)->getQuery()->getResult();
+
+            while($entity = $results->fetch()) {
+                $row = array();
+                foreach($entity as $column => $value) {
+                    $row[$column] = $value;
+                }
+                fputcsv($handle,$row,';');
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+
+        return $response;
     }
 
     /**
