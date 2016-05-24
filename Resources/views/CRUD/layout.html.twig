@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-sm-12 text-right">
                 {% block crud_filters_button %}
-                    {% if current_route == routes.list and list_is_filterable == true %}
+                    {% if current_route == routes.list and list_is_filterable is defined and list_is_filterable == true %}
                         <a href="#filterForm" data-toggle="collapse" class="btn btn-primary">Show/hide filter fields</a>
                     {% endif %}
                 {% endblock %}
