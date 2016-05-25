@@ -68,3 +68,30 @@ class PostList extends AbstractFilterableListType
 }
 ```
 
+Configuration to enable list to Export CSV
+==========================================
+
+Lists/PostList.php:
+```php
+<?php
+
+namespace AppBundle\Lists;
+
+use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractListType;
+use MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\ButtonFieldType;
+
+class PostList extends AbstractListType
+{
+    public function build()
+    {
+        ...
+    }
+
+    public function configureCsvFields()
+    {
+        $this->addToCsv('title')
+             ->addToCsv('dateCreated');
+    }
+}
+```
+

@@ -22,6 +22,17 @@ abstract class AbstractSimpleCRUDController extends AbstractCoreCRUDController i
     }
 
     /**
+     * Lists all entities.
+     *
+     * @Route("/csv")
+     * @Method("GET")
+     */
+    public function csvAction(Request $request)
+    {
+        return $this->handleCsv($request);
+    }
+
+    /**
      * Creates a new entity.
      *
      * @Route("/create")
