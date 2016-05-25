@@ -10,6 +10,12 @@
                     {% endif %}
                 {% endblock %}
 
+                {% block crud_export_csv_button %}
+                    {% if current_route == routes.list and list_is_exportable == true %}
+                        <a href="{{ generated_routes.csv }}" class="btn btn-primary">Export to CSV</a>
+                    {% endif %}
+                {% endblock %}
+
                 {% block crud_create_button %}
                     {% if generated_routes.create is defined and current_route != routes.create and can_create == true %}
                         <a href="{{ generated_routes.create }}" class="btn btn-primary">Create</a>

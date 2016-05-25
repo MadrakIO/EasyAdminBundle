@@ -54,10 +54,8 @@ class PostList extends AbstractFilterableListType
 {
     public function build()
     {
-        $this->add('title')
-             ->add('dateCreated')
-             ->add('editAction', ButtonFieldType::class, ['label' => 'Edit', 'route' => ['name' => 'app_bundle_post_edit']])
-             ->configureFilters();
+        ...
+        $this->configureFilters();
     }
 
     public function configureFilters()
@@ -85,6 +83,7 @@ class PostList extends AbstractListType
     public function build()
     {
         ...
+        $this->configureCsvFields();
     }
 
     public function configureCsvFields()

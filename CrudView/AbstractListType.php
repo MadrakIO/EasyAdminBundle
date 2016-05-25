@@ -48,6 +48,11 @@ abstract class AbstractListType extends AbstractType
         return $this instanceOf AbstractFilterableListType;
     }
 
+    public function isExportable()
+    {
+        return count($this->csvFields) > 0;
+    }
+
     public function setPaginator($paginator)
     {
         $this->paginator = $paginator;
