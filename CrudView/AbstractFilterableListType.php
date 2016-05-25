@@ -48,7 +48,7 @@ abstract class AbstractFilterableListType extends AbstractListType
         return $form->getForm();
     }
 
-    protected function createQueryBuilder(Request $request, array $criteria)
+    public function createQueryBuilder(Request $request, array $criteria)
     {
         $form = $this->createFilterForm($request);
         $form->handleRequest($request);

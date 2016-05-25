@@ -17,6 +17,7 @@ abstract class AbstractListType extends AbstractType
     protected $entityClass;
     protected $paginator;
     protected $checkGrants = true;
+    protected $csvFields;
 
     public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, FormFactory $formFactory, $entityClass)
     {
@@ -65,7 +66,19 @@ abstract class AbstractListType extends AbstractType
         return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data]);
     }
 
-    protected function createQueryBuilder(Request $request, array $criteria)
+    public function addToCsv($field)
+    {
+        $this->csvFields[] = $field;
+
+        return $this;
+    }
+
+    public function getCsvFields()
+    {
+        return $this->csvFields;
+    }
+
+    public function createQueryBuilder(Request $request, array $criteria)
     {
         return $this->entityManager->createQueryBuilder()
                                    ->select('entity')

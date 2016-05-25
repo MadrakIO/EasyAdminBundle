@@ -196,17 +196,27 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function handleCsv(Request $request, array $criteria = [])
     {
         $response = new StreamedResponse();
-        $response->setCallback(function() {
+        $response->setCallback(function() use ($request, $criteria) {
             $handle = fopen('php://output', 'w+');
+
+            $this->entityList->configureCsvFields();
+            $fields = $this->entityList->getCsvFields();
+
+            fputcsv($handle, $fields, ';');
 
             $results = $this->entityList->createQueryBuilder($request, $criteria)->getQuery()->getResult();
 
-            while($entity = $results->fetch()) {
+            foreach($results as $entity) {
                 $row = array();
-                foreach($entity as $column => $value) {
-                    $row[$column] = $value;
+
+                foreach($fields as $field) {
+                    $getField = 'get' . ucfirst($field);
+                    if (method_exists($entity, $getField)) {
+                        $row[] = $entity->$getField();
+                    }
                 }
-                fputcsv($handle,$row,';');
+
+                fputcsv($handle, $row, ';');
             }
 
             fclose($handle);
