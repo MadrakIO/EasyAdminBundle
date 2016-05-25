@@ -273,6 +273,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                 return $this->isGranted(EasyAdminVoterInterface::CREATE, $object);
             case 'show':
             case 'list':
+            case 'csv':
                 return $this->isGranted(EasyAdminVoterInterface::SHOW, $object);
             case 'edit':
                 return $this->isGranted(EasyAdminVoterInterface::EDIT, $object);
@@ -339,7 +340,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $generatedRoutes = [];
 
         foreach ($this->getRelatedRoutes() AS $routeKey => $route) {
-            if (in_array($routeKey, ['create', 'edit', 'show', 'list']) === false) {
+            if (in_array($routeKey, ['create', 'edit', 'show', 'list', 'csv']) === false) {
                 continue;
             }
 

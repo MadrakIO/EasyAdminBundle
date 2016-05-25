@@ -16,7 +16,7 @@ abstract class AbstractFilterableListType extends AbstractListType
     {
         $this->build();
         $data = $this->getDataList($request, $criteria);
-        $filterForm = $this->createFilterForm($request, $entity);
+        $filterForm = $this->createFilterForm($request);
 
         return $this->templating->render($this->getListWrapperView(), ['crud_list_data_header' => $this->fields, 'crud_list_data_rows' => $data, 'filter_form' => $filterForm->createView()]);
     }
