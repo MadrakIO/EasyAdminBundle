@@ -58,7 +58,7 @@ abstract class AbstractFilterableListType extends AbstractListType
         if ($form->isSubmitted() === true && $form->isValid() === true) {
             $firstLoop = true;
             foreach ($form->getData() AS $fieldKey => $value) {
-                if (empty($value) === true) {
+                if (is_null($value) === true) {
                     continue;
                 }
 
