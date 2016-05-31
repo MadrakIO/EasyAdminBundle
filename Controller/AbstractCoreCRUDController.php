@@ -64,7 +64,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                 [
                     'listView' => $this->entityList->createView($request, $criteria),
                     'list_is_filterable' => $this->entityList->isFilterable(),
-                    'list_is_exportable' => $this->entityList->isExportable()
+                    'list_is_exportable' => $this->entityList->isExportable(),
+                    'filter_is_active' => $this->entityList->isSubmitted($request)
                 ]);
     }
 
