@@ -13,6 +13,10 @@ use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
 
 abstract class AbstractCoreCRUDController extends AbstractController implements CrudControllerInterface
 {
+    const CREATE_RECORD_SUCCESS_MSG = 'Your record was successfully created.';
+    const CREATE_RECORD_ERROR_MSG = 'There was an error attempting to create your record: %s.';
+    const UPDATE_RECORD_SUCCESS_MSG = 'Your record was successfully updated.';
+    const UPDATE_RECORD_ERROR_MSG = 'There was an error attempting to update your record: %s.';
     const MISSING_CRUD_VIEW = 'The CRUD view for the specified action (%s) does not exist.';
 
     protected $entityFormType;
@@ -86,12 +90,18 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $form = $this->createForm($this->entityFormType, $entity);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush();
-            $routeInfo = $this->getCreateRouteRedirect($request, $entity);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
+                $routeInfo = $this->getCreateRouteRedirect($request, $entity);
 
-            return $this->redirectToRoute($routeInfo['route'], $routeInfo['parameters']);
+                $this->alertSuccess(static::CREATE_RECORD_SUCCESS_MSG);
+
+                return $this->redirectToRoute($routeInfo['route'], $routeInfo['parameters']);
+            }
+
+            $this->alertError(static::CREATE_RECORD_ERROR_MSG, [$form->getErrors()->__toString()]);
         }
 
         return $this->render($this->getCrudView('create'),
@@ -147,11 +157,17 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $editForm = $this->createForm($this->entityFormType, $entity);
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush();
+        if ($editForm->isSubmitted()) {
+            if ($editForm->isValid()) {
+                $this->entityManager->persist($entity);
+                $this->entityManager->flush();
 
-            return $this->redirectToRoute($this->getCrudRoute('edit'), $this->getCurrentRouteParameters($request));
+                $this->alertSuccess(static::UPDATE_RECORD_SUCCESS_MSG);
+
+                return $this->redirectToRoute($this->getCrudRoute('edit'), $this->getCurrentRouteParameters($request));
+            }
+
+            $this->alertError(static::UPDATE_RECORD_ERROR_MSG, [$form->getErrors()->__toString()]);
         }
 
         return $this->render($this->getCrudView('edit'),
@@ -371,6 +387,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     'routes' => $this->getRelatedRoutes(),
                     'check_grants' => $this->getParameter('madrak_io_easy_admin.check_grants'),
                     'can_create' => $this->hasCrudRouteAccess('create'),
+                    'has_alerts_enabled' => $this->hasAlertsEnabled()
                 ];
     }
 }

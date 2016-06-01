@@ -65,5 +65,9 @@
         </div>
     {% endblock %}
 
+    {% if has_alerts_enabled == true %}
+        {{ render_flash_alerts() }}
+    {% endif %}
+
     {% block crud_content %}{% endblock %}
 {% endblock %}

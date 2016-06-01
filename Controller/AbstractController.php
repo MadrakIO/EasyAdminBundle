@@ -92,6 +92,72 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * Displays a Success Alert if display_ras_alerts is enabled
+     *
+     * @return AbstractController
+     */
+    protected function alertSuccess($message, array $parameters = [])
+    {
+        if ($this->hasAlertsEnabled() === true) {
+            $this->get('ras_flash_alert.alert_reporter')->addSuccess(vsprintf($message, $parameters));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Displays an Error Alert if display_ras_alerts is enabled
+     *
+     * @return AbstractController
+     */
+    protected function alertError($message, array $parameters = [])
+    {
+        if ($this->hasAlertsEnabled() === true) {
+            $this->get('ras_flash_alert.alert_reporter')->addError(vsprintf($message, $parameters));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Displays a Warning Alert if display_ras_alerts is enabled
+     *
+     * @return AbstractController
+     */
+    protected function alertWarning($message, array $parameters = [])
+    {
+        if ($this->hasAlertsEnabled() === true) {
+            $this->get('ras_flash_alert.alert_reporter')->addWarning(vsprintf($message, $parameters));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Displays an Info Alert if display_ras_alerts is enabled
+     *
+     * @return AbstractController
+     */
+    protected function alertInfo($message, array $parameters = [])
+    {
+        if ($this->hasAlertsEnabled() === true) {
+            $this->get('ras_flash_alert.alert_reporter')->addInfo(vsprintf($message, $parameters));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns true if alerts should be displayed, false if they should not
+     *
+     * @return boolean
+     */
+    protected function hasAlertsEnabled()
+    {
+        return $this->getParameter('madrak_io_easy_admin.display_ras_alerts') === true && $this->container->has('ras_flash_alert.alert_reporter') === true;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return boolean
