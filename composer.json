@@ -20,10 +20,11 @@
     },
     "suggest": {
         "knplabs/knp-paginator-bundle": "2.5.*",
-        "knplabs/knp-menu-bundle": "2.1.*"
+        "knplabs/knp-menu-bundle": "2.1.*",
+        "ras/flash-alert-bundle": "2.1.*"
     },
-    "autoload": {                                                                                                                                                                                                                         
-        "psr-4": {                                                                                                                                                                                                                        
+    "autoload": {
+        "psr-4": {
             "MadrakIO\\Bundle\\EasyAdminBundle\\": ""
         }
     }

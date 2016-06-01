@@ -27,9 +27,12 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
                 ->booleanNode('check_grants')
-                    ->info('If this is set to true, the AbstractCRUDController will use denyAccessUnlessGranted to control access.')
+                    ->info('If this is set to true, the AbstractCoreCRUDController will use denyAccessUnlessGranted to control access.')
                     ->defaultValue(false)
                 ->end()
+                ->booleanNode('display_ras_alerts')
+                    ->info('If this is set to true and RasFlashAlertBundle is installed the AbstractCoreCRUDController will display success and error alerts using RasFlashAlertBundle.')
+                    ->defaultValue(true)
             ->end();
 
         // Here you should define the parameters that are allowed to
