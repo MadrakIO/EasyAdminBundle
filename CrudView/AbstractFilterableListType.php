@@ -45,13 +45,12 @@ abstract class AbstractFilterableListType extends AbstractListType
             $form->add($key, $filterField['type'], $filterField['options']);
         }
 
-        return $form->getForm();
+        return $form->getForm()->handleRequest($request);
     }
 
     public function createQueryBuilder(Request $request, array $criteria)
     {
         $form = $this->createFilterForm($request);
-        $form->handleRequest($request);
         $queryBuilder = $this->entityManager->createQueryBuilder()
                                             ->select('entity')
                                             ->from($this->entityClass, 'entity');
@@ -59,7 +58,7 @@ abstract class AbstractFilterableListType extends AbstractListType
         if ($form->isSubmitted() === true && $form->isValid() === true) {
             $firstLoop = true;
             foreach ($form->getData() AS $fieldKey => $value) {
-                if (empty($value) === true) {
+                if (is_null($value) === true) {
                     continue;
                 }
 

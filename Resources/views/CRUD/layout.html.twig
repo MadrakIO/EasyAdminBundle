@@ -3,7 +3,13 @@
 {% block content %}
     {% block crud_top_navigation %}
         <div class="row">
-            <div class="col-sm-12 text-right">
+            <div class="col-sm-12 text-right form-group eab-actions">
+                {% block crud_reset_filters_button %}
+                    {% if current_route == routes.list and filter_is_active is defined and filter_is_active == true %}
+                        <a href="{{ generated_routes.list }}" class="btn btn-primary">Reset Filters</a>
+                    {% endif %}
+                {% endblock %}
+
                 {% block crud_filters_button %}
                     {% if current_route == routes.list and list_is_filterable is defined and list_is_filterable == true %}
                         <a href="#filterForm" data-toggle="collapse" class="btn btn-primary">Show/hide filter fields</a>
@@ -12,7 +18,7 @@
 
                 {% block crud_export_csv_button %}
                     {% if current_route == routes.list and list_is_exportable == true %}
-                        <a href="{{ generated_routes.csv }}" class="btn btn-primary">Export to CSV</a>
+                        <a href="{{ generated_routes.csv }}{% if filter_params is defined and filter_params != "" %}?{{filter_params}}{% endif %}" class="btn btn-primary">Export to CSV</a>
                     {% endif %}
                 {% endblock %}
 

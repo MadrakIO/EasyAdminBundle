@@ -64,7 +64,9 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                 [
                     'listView' => $this->entityList->createView($request, $criteria),
                     'list_is_filterable' => $this->entityList->isFilterable(),
-                    'list_is_exportable' => $this->entityList->isExportable()
+                    'list_is_exportable' => $this->entityList->isExportable(),
+                    'filter_is_active' => $this->entityList->isSubmitted($request),
+                    'filter_params' => $request->server->get('QUERY_STRING')
                 ]);
     }
 
@@ -196,6 +198,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function handleCsv(Request $request, array $criteria = [])
     {
+        $this->entityList->build();
         $response = new StreamedResponse();
         $response->setCallback(function() use ($request, $criteria) {
             $handle = fopen('php://output', 'w+');

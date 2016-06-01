@@ -53,6 +53,11 @@ abstract class AbstractListType extends AbstractType
         return count($this->csvFields) > 0;
     }
 
+    public function isSubmitted($request)
+    {
+        return $this->isFilterable() and $this->createFilterForm($request)->isSubmitted();
+    }
+
     public function setPaginator($paginator)
     {
         $this->paginator = $paginator;

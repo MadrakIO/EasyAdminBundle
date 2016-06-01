@@ -1,11 +1,11 @@
 {% if filter_form is defined %}
-    {{ form_start(filter_form, {'attr': {'id': 'filterForm', 'class': 'collapse'}}) }}
+    {{ form_start(filter_form, {'attr': {'id': 'filterForm', 'class': 'collapse eab-filter'}}) }}
         {{ form_widget(filter_form) }}
         <button type="submit" class="btn btn-primary">Filter</button>
     {{ form_end(filter_form) }}
 {% endif %}
 
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped eab-list">
     <thead>
         <tr>
             {% for fieldKey, field in crud_list_data_header %}
