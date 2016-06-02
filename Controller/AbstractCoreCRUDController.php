@@ -167,7 +167,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                 return $this->redirectToRoute($this->getCrudRoute('edit'), $this->getCurrentRouteParameters($request));
             }
 
-            $this->alertError(static::UPDATE_RECORD_ERROR_MSG, [$form->getErrors()->__toString()]);
+            $this->alertError(static::UPDATE_RECORD_ERROR_MSG, [$editForm->getErrors()->__toString()]);
         }
 
         return $this->render($this->getCrudView('edit'),
