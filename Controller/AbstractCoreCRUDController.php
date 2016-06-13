@@ -236,8 +236,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                             $value = implode(',', $value);
                         }
                         $row[] = $value;
+
                         continue;
                     }
+
                     $isField = 'is' . ucfirst($field);
                     if (method_exists($entity, $isField)) {
                         $row[] = ($entity->$isField() === true) ? 'Yes' : 'No';
