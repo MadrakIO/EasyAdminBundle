@@ -219,7 +219,6 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $response->setCallback(function() use ($request, $criteria) {
             $handle = fopen('php://output', 'w+');
 
-            $this->entityList->configureCsvFields();
             $fields = $this->entityList->getCsvFields();
 
             fputcsv($handle, $fields, ';');
@@ -232,7 +231,18 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                 foreach($fields as $field) {
                     $getField = 'get' . ucfirst($field);
                     if (method_exists($entity, $getField)) {
-                        $row[] = $entity->$getField();
+                        $value = $entity->$getField();
+                        if (is_array($value)) {
+                            $value = implode(',', $value);
+                        }
+                        $row[] = $value;
+
+                        continue;
+                    }
+
+                    $isField = 'is' . ucfirst($field);
+                    if (method_exists($entity, $isField)) {
+                        $row[] = ($entity->$isField() === true) ? 'Yes' : 'No';
                     }
                 }
 

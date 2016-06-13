@@ -68,8 +68,8 @@ abstract class AbstractFilterableListType extends AbstractListType
                     $firstLoop = false;
                 }
 
-                $queryBuilder->$whereMethod(sprintf('entity.%s = :%s', $fieldKey, $fieldKey))
-                             ->setParameter($fieldKey, $value);
+                $queryBuilder->$whereMethod(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
+                             ->setParameter($fieldKey, '%'.$value.'%');
             }
         }
 
