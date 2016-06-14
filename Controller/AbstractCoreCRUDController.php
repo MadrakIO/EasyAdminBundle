@@ -154,7 +154,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
 
         $deleteForm = $this->createDeleteForm($request, $entity);
-        $editForm = $this->createForm($this->entityFormType, $entity);
+        $editForm = $this->createForm($this->entityFormType, $entity, array('validation_groups' => 'Default'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted()) {
