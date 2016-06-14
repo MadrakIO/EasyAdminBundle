@@ -94,7 +94,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             if ($form->isValid()) {
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
-                $routeInfo = $this->getCreateRouteRedirect($request, $entity);
+                $routeInfo = $this->getCreateRouteRedirect($request, $entity, $this->getCreateFormOptions());
 
                 $this->alertSuccess(static::CREATE_RECORD_SUCCESS_MSG);
 
@@ -154,7 +154,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
 
         $deleteForm = $this->createDeleteForm($request, $entity);
-        $editForm = $this->createForm($this->entityFormType, $entity);
+        $editForm = $this->createForm($this->entityFormType, $entity, $this->getEditFormOptions());
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted()) {
@@ -233,7 +233,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
                         if (is_array($value)) {
-                            $value = implode(';', $value);
+                            $value = implode(',', $value);
                         }
                         $row[] = $value;
 
@@ -265,6 +265,22 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+
+    /**
+     * Get entity class.
+     */
+    public function getEditFormOptions()
+    {
+        return array();
+    }
+
+    /**
+     * Get entity class.
+     */
+    public function getCreateFormOptions()
+    {
+        return array();
     }
 
     /**
