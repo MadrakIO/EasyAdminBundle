@@ -221,7 +221,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
             $fields = $this->entityList->getCsvFields();
 
-            fputcsv($handle, $fields, ';');
+            fputcsv($handle, $fields);
 
             $results = $this->entityList->createQueryBuilder($request, $criteria)->getQuery()->getResult();
 
@@ -233,7 +233,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
                         if (is_array($value)) {
-                            $value = implode(',', $value);
+                            $value = implode(';', $value);
                         }
                         $row[] = $value;
 
@@ -246,7 +246,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     }
                 }
 
-                fputcsv($handle, $row, ';');
+                fputcsv($handle, $row);
             }
 
             fclose($handle);
