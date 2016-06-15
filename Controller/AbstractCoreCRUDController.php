@@ -87,7 +87,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
 
-        $form = $this->createForm($this->entityFormType, $entity);
+        $form = $this->createForm($this->entityFormType, $entity, $this->getCreateFormOptions());
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -154,7 +154,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
 
         $deleteForm = $this->createDeleteForm($request, $entity);
-        $editForm = $this->createForm($this->entityFormType, $entity);
+        $editForm = $this->createForm($this->entityFormType, $entity, $this->getEditFormOptions());
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted()) {
@@ -221,7 +221,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
             $fields = $this->entityList->getCsvFields();
 
-            fputcsv($handle, $fields, ';');
+            fputcsv($handle, $fields);
 
             $results = $this->entityList->createQueryBuilder($request, $criteria)->getQuery()->getResult();
 
@@ -246,7 +246,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     }
                 }
 
-                fputcsv($handle, $row, ';');
+                fputcsv($handle, $row);
             }
 
             fclose($handle);
@@ -265,6 +265,22 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+
+    /**
+     * Get entity class.
+     */
+    public function getEditFormOptions()
+    {
+        return array();
+    }
+
+    /**
+     * Get entity class.
+     */
+    public function getCreateFormOptions()
+    {
+        return array();
     }
 
     /**
