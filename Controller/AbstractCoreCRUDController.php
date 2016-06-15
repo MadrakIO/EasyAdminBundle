@@ -252,9 +252,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             fclose($handle);
         });
 
+        $fileName = vsprintf('export-%s-%s.csv', [strtolower($this->getUserFriendlyEntityName()), date("YmdHis")]);
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        $response->headers->set('Content-Disposition', vsprintf('attachment; filename="%s"', [$fileName]));
 
         return $response;
     }
