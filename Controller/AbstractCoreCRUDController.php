@@ -87,14 +87,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
 
-        $form = $this->createForm($this->entityFormType, $entity);
+        $form = $this->createForm($this->entityFormType, $entity, $this->getCreateFormOptions());
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $this->entityManager->persist($entity);
                 $this->entityManager->flush();
-                $routeInfo = $this->getCreateRouteRedirect($request, $entity, $this->getCreateFormOptions());
+                $routeInfo = $this->getCreateRouteRedirect($request, $entity);
 
                 $this->alertSuccess(static::CREATE_RECORD_SUCCESS_MSG);
 
