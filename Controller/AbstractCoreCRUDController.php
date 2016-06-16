@@ -254,7 +254,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $this->getExportName()));
 
         return $response;
     }
@@ -268,7 +268,15 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
-     * Get entity class.
+     * Get export name.
+     */
+    public function getExportName()
+    {
+        return vsprintf('export-%s-%s.csv', [strtolower($this->getUserFriendlyEntityName()), date("YmdHis")]);
+    }
+
+    /**
+     * Get edit form options.
      */
     public function getEditFormOptions()
     {
@@ -276,7 +284,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
-     * Get entity class.
+     * Get create form options.
      */
     public function getCreateFormOptions()
     {
