@@ -66,6 +66,36 @@ class PostList extends AbstractFilterableListType
 }
 ```
 
+Adding a default filter on Filterable List
+==========================================
+
+Lists/PostList.php:
+```php
+<?php
+
+namespace AppBundle\Lists;
+
+use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractFilterableListType;
+use MadrakIO\Bundle\EasyAdminBundle\CrudView\FieldType\ButtonFieldType;
+
+class PostList extends AbstractFilterableListType
+{
+    public function build()
+    {
+        ...
+    }
+
+    public function filterQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $queryBuilder->andWhere('entity.status = :status')
+                     ->setParameter('status', 'expired');
+
+        return $queryBuilder;
+    }
+}
+```
+
+
 Configuration to enable list to Export CSV
 ==========================================
 

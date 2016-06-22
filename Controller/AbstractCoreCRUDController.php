@@ -232,10 +232,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     $getField = 'get' . ucfirst($field);
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
-                        if (is_array($value)) {
-                            $value = implode(',', $value);
-                        }
-                        $row[] = $value;
+
+                        $row[] = $this->formatDataForCsv($field, $value);
 
                         continue;
                     }
@@ -257,6 +255,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $this->getExportName()));
 
         return $response;
+    }
+
+    /**
+     * Format data for CSV
+     */
+    public function formatDataForCsv($field, $value)
+    {
+        return $value;
     }
 
     /**

@@ -55,24 +55,31 @@ abstract class AbstractFilterableListType extends AbstractListType
                                             ->select('entity')
                                             ->from($this->entityClass, 'entity');
 
+        $queryBuilder = $this->filterQueryBuilder($queryBuilder);
+
         if ($form->isSubmitted() === true && $form->isValid() === true) {
-            $firstLoop = true;
             foreach ($form->getData() AS $fieldKey => $value) {
                 if (is_null($value) === true) {
                     continue;
                 }
 
-                $whereMethod = 'andWhere';
-                if ($firstLoop === true) {
-                    $whereMethod = 'where';
-                    $firstLoop = false;
+                if (is_string($value) === true) {
+                    $queryBuilder->andWhere(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
+                                 ->setParameter($fieldKey, '%'.$value.'%');
+
+                    continue;
                 }
 
-                $queryBuilder->$whereMethod(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
-                             ->setParameter($fieldKey, '%'.$value.'%');
+                $queryBuilder->andWhere(sprintf('entity.%s = :%s', $fieldKey, $fieldKey))
+                             ->setParameter($fieldKey, $value);
             }
         }
 
+        return $queryBuilder;
+    }
+
+    public function filterQueryBuilder(QueryBuilder $queryBuilder)
+    {
         return $queryBuilder;
     }
 }
