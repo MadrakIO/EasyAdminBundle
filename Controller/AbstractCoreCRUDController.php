@@ -232,9 +232,15 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     $getField = 'get' . ucfirst($field);
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
+
                         if (is_array($value)) {
                             $value = implode(',', $value);
                         }
+
+                        if ($value instanceof Datetime) {
+                            $value = $value->format('Y-m-d H:i:s');
+                        }
+
                         $row[] = $value;
 
                         continue;
