@@ -66,6 +66,7 @@ abstract class AbstractFilterableListType extends AbstractListType
                 if (is_string($value) === true) {
                     $queryBuilder->andWhere(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
                                  ->setParameter($fieldKey, '%'.$value.'%');
+
                     continue;
                 }
 

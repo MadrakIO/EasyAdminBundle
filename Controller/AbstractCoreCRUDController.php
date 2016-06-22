@@ -233,15 +233,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
 
-                        if (is_array($value)) {
-                            $value = implode(',', $value);
-                        }
-
-                        if ($value instanceof Datetime) {
-                            $value = $value->format('Y-m-d H:i:s');
-                        }
-
-                        $row[] = $value;
+                        $row[] = $this->formatDataForCsv($entity, $value);
 
                         continue;
                     }
@@ -263,6 +255,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $this->getExportName()));
 
         return $response;
+    }
+
+    /**
+     * Format data for CSV
+     */
+    public function formatDataForCsv($entity, $value)
+    {
+        return $value;
     }
 
     /**
