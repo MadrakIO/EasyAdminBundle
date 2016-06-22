@@ -233,7 +233,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     if (method_exists($entity, $getField)) {
                         $value = $entity->$getField();
 
-                        $row[] = $this->formatDataForCsv($entity, $value);
+                        $row[] = $this->formatDataForCsv($field, $value);
 
                         continue;
                     }
@@ -260,7 +260,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     /**
      * Format data for CSV
      */
-    public function formatDataForCsv($entity, $value)
+    public function formatDataForCsv($field, $value)
     {
         return $value;
     }
