@@ -55,24 +55,47 @@ abstract class AbstractFilterableListType extends AbstractListType
                                             ->select('entity')
                                             ->from($this->entityClass, 'entity');
 
+        $queryBuilder = $this->filterQueryBuilder($queryBuilder);
+
         if ($form->isSubmitted() === true && $form->isValid() === true) {
-            $firstLoop = true;
             foreach ($form->getData() AS $fieldKey => $value) {
                 if (is_null($value) === true) {
                     continue;
                 }
 
-                $whereMethod = 'andWhere';
-                if ($firstLoop === true) {
-                    $whereMethod = 'where';
-                    $firstLoop = false;
+                if ($value instanceof Datetime && strpos($fieldKey, '_from')) {
+                    $field = str_replace('_from', '', $fieldKey);
+
+                    $queryBuilder->andWhere(sprintf('entity.%s >= :%s', $field, $fieldKey))
+                                 ->setParameter($fieldKey, $value);
+                    continue;
                 }
 
-                $queryBuilder->$whereMethod(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
-                             ->setParameter($fieldKey, '%'.$value.'%');
+                if ($value instanceof Datetime && strpos($fieldKey, '_to')) {
+                    $field = str_replace('_to', '', $fieldKey);
+                    $value->setTime(23, 59, 59);
+
+                    $queryBuilder->andWhere(sprintf('entity.%s <= :%s', $field, $fieldKey))
+                                 ->setParameter($fieldKey, $value);
+                    continue;
+                }
+
+                if (is_string($value) === true) {
+                    $queryBuilder->andWhere(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
+                                 ->setParameter($fieldKey, '%'.$value.'%');
+                    continue;
+                }
+
+                $queryBuilder->andWhere(sprintf('entity.%s = :%s', $fieldKey, $fieldKey))
+                             ->setParameter($fieldKey, $value);
             }
         }
 
+        return $queryBuilder;
+    }
+
+    public function filterQueryBuilder(QueryBuilder $queryBuilder)
+    {
         return $queryBuilder;
     }
 }
