@@ -63,23 +63,6 @@ abstract class AbstractFilterableListType extends AbstractListType
                     continue;
                 }
 
-                if ($value instanceof Datetime && strpos($fieldKey, '_from')) {
-                    $field = str_replace('_from', '', $fieldKey);
-
-                    $queryBuilder->andWhere(sprintf('entity.%s >= :%s', $field, $fieldKey))
-                                 ->setParameter($fieldKey, $value);
-                    continue;
-                }
-
-                if ($value instanceof Datetime && strpos($fieldKey, '_to')) {
-                    $field = str_replace('_to', '', $fieldKey);
-                    $value->setTime(23, 59, 59);
-
-                    $queryBuilder->andWhere(sprintf('entity.%s <= :%s', $field, $fieldKey))
-                                 ->setParameter($fieldKey, $value);
-                    continue;
-                }
-
                 if (is_string($value) === true) {
                     $queryBuilder->andWhere(sprintf('entity.%s LIKE :%s', $fieldKey, $fieldKey))
                                  ->setParameter($fieldKey, '%'.$value.'%');
