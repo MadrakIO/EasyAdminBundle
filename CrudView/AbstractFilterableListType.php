@@ -5,6 +5,7 @@ namespace MadrakIO\Bundle\EasyAdminBundle\CrudView;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\Labeler\FieldTypeLabeler;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\QueryBuilder;
 
 abstract class AbstractFilterableListType extends AbstractListType
 {
