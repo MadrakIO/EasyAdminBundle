@@ -133,7 +133,7 @@ abstract class AbstractListType extends AbstractType
                     $options = $options['type']::getDefaultOptions($options, $field);
                 }
 
-                if (empty($options['use_entity']) === false) {
+                if (isset($options['use_entity']) === true && $options['use_entity'] === true)
                     $options['entity'] = $result;
                 }
 
