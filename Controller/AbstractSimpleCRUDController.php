@@ -100,7 +100,7 @@ abstract class AbstractSimpleCRUDController extends AbstractCoreCRUDController i
     {
         $routes = [];
         if ($this->hasCrudRoute('list') === true && $this->hasCrudRouteAccess('list') === true) {
-            $routes[] = ['title' => $this->setMenuLabel(), 'route' => $this->getCrudRoute('list')];
+            $routes[] = ['title' => $this->getMenuLabel(), 'route' => $this->getCrudRoute('list')];
         }
 
         return $routes;
@@ -109,7 +109,7 @@ abstract class AbstractSimpleCRUDController extends AbstractCoreCRUDController i
     /**
      * Gets the menu label that are displayed in the menu.
      */
-    public function setMenuLabel()
+    public function getMenuLabel()
     {
         return 'List '.$this->getUserFriendlyEntityName();
     }
