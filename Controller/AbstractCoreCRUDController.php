@@ -202,6 +202,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             $this->entityManager->flush();
         }
 
+        if($request->request->get('redirect') === 'false') {
+            return new JsonResponse(['success' => true]);
+        }
+
         return $this->redirectToRoute($this->getCrudRoute('list'), $this->getCurrentRouteParameters($request));
     }
 
