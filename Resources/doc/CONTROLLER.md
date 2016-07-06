@@ -28,7 +28,7 @@ services:
         class: AppBundle\Controller\PostController
         arguments: ['@appbundle.post_form', '@appbundle.post_list', '@appbundle.post_show', 'AppBundle\Entity\Post']
         tags:
-            -  { name: madrak_io_easy_admin.crud_controller }
+            -  { name: madrak_io_easy_admin.controller }
         calls:
             - ['setCrudView', [ 'show', 'AppBundle:Posts:CRUD/show.html.twig' ] ]
             - ['setCrudView', [ 'edit', 'AppBundle:Posts:CRUD/edit.html.twig' ] ]
