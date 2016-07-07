@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractShowType;
 use MadrakIO\Bundle\EasyAdminBundle\CrudView\AbstractListType;
 use MadrakIO\Bundle\EasyAdminBundle\Security\EasyAdminVoterInterface;
