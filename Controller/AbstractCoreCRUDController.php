@@ -188,7 +188,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      *
      * @return Response
      */
-    public function handleDelete(Request $request, array $criteria)
+    public function handleDelete(Request $request, array $criteria, $redirect = true)
     {
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
@@ -200,6 +200,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
+        }
+
+        if ($redirect === false) {
+            return new JsonResponse(['success' => true]);
         }
 
         return $this->redirectToRoute($this->getCrudRoute('list'), $this->getCurrentRouteParameters($request));
