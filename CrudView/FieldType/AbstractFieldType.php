@@ -35,6 +35,8 @@ abstract class AbstractFieldType
             $options['received_default_options'] = true;
         }
 
+        $options['sort_by'] = (isset($options['sort_by']) === true) ? $options['sort_by'] : 'entity.' . $field;
+
         return $options;
     }
 
