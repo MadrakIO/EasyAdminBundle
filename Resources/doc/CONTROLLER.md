@@ -33,7 +33,6 @@ services:
             - ['setCrudView', [ 'show', 'AppBundle:Posts:CRUD/show.html.twig' ] ]
             - ['setCrudView', [ 'edit', 'AppBundle:Posts:CRUD/edit.html.twig' ] ]
             - ['setMenuIcon', [ 'fa-post' ]]
-            - ['setBreadcrumbsBundle', ['@white_october_breadcrumbs']]
 ```
 
 Routing:

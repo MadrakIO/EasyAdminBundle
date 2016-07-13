@@ -30,7 +30,6 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                                 'show' => 'MadrakIOEasyAdminBundle:CRUD:show.html.twig',
                                 'edit' => 'MadrakIOEasyAdminBundle:CRUD:edit.html.twig',
                             ];
-    protected $breadcrumbsBundle;
 
     public function __construct(AbstractType $entityFormType, AbstractListType $entityList, AbstractShowType $entityShow, $entityClass)
     {
@@ -51,20 +50,6 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function setCrudView($action, $view)
     {
         $this->crudViews[$action] = $view;
-
-        return $this;
-    }
-
-    /**
-     * Set the breadCrumbsBundle.
-     *
-     * @param WhiteOctoberBreadcrumbsBundle $breadcrumbsBundle
-     *
-     * @return AbstractCRUDController
-     */
-    public function setBreadcrumbsBundle(WhiteOctoberBreadcrumbsBundle $breadcrumbsBundle)
-    {
-        $this->breadcrumbsBundle = $breadcrumbsBundle;
 
         return $this;
     }
@@ -336,14 +321,6 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
-     * Check if the controller has the breadcrumb bundle.
-     */
-    public function hasBreadcrumbsBundle()
-    {
-        return $this->breadcrumbsBundle instanceof \WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
-    }
-
-    /**
      * Check if the controller has the specified crud route.
      */
     public function hasCrudRoute($routeType)
@@ -395,12 +372,12 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function prependAndAddBreadcrumbItem($item)
     {
-        if ($this->hasBreadcrumbsBundle() === false) {
+        if ($this->has('white_october_breadcrumbs') === false) {
             return false;
         }
 
         $this->prependBreadcrumb();
-        $this->breadcrumbs->addItem($item);
+        $this->get("white_october_breadcrumbs")->addItem($item);
     }
 
     /**
@@ -410,12 +387,11 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function prependBreadcrumb()
     {
-        if ($this->hasBreadcrumbsBundle() === false) {
+        if ($this->has('white_october_breadcrumbs') === false) {
             return false;
         }
 
-        $this->breadcrumbs = $this->get("white_october_breadcrumbs");
-        $this->breadcrumbs->addItem(
+        $this->get("white_october_breadcrumbs")->addItem(
             $this->getMenuLabel('list'),
             $this->get("router")->generate($this->getCrudRoute('list'))
         );
@@ -435,6 +411,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         }
 
         return $this->crudViews[$action];
+    }
+
+    /**
+     * Gets the menu label that are displayed in the menu.
+     */
+    public function getMenuLabel($type)
+    {
+        return ucfirst($type) . ' ' . $this->getUserFriendlyEntityName();
     }
 
     /**
