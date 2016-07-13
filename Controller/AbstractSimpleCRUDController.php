@@ -107,14 +107,6 @@ abstract class AbstractSimpleCRUDController extends AbstractCoreCRUDController i
     }
 
     /**
-     * Gets the menu label that are displayed in the menu.
-     */
-    public function getMenuLabel($type)
-    {
-        return ucfirst($type) . ' ' . $this->getUserFriendlyEntityName();
-    }
-
-    /**
      * Sets the menu icon, used in the service declaration
      *
      * @param string $menuIcon

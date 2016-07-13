@@ -32,7 +32,7 @@ services:
         calls:
             - ['setCrudView', [ 'show', 'AppBundle:Posts:CRUD/show.html.twig' ] ]
             - ['setCrudView', [ 'edit', 'AppBundle:Posts:CRUD/edit.html.twig' ] ]
-            - [ setMenuIcon, [ "fa-post" ]]
+            - ['setMenuIcon', [ 'fa-post' ]]
 ```
 
 Routing:

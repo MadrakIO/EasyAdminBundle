@@ -17,6 +17,7 @@ Optional Bundles
 * If ```knplabs/knp-paginator-bundle``` is installed, you can use the paginator for the List View page.
 * If ```knplabs/knp-menu-bundle``` is installed, EasyAdminBundle will automatically generate ```madrak_io_easy_admin_crud_menu``` which will link to each of your list pages.
 * If ```ras/flash-alert-bundle``` is installed, EasyAdminBundle will add Success and Error messages to various pages (ie when an entity is created/updated).
+* If ```whiteoctober/breadcrumbs-bundle``` is installed, you can use the breadcrumbs for the CRUD pages.
 
 Enabling Check Grants
 =======================

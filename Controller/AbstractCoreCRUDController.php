@@ -63,6 +63,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderList(Request $request, array $criteria = [])
     {
+        $this->prependBreadcrumb();
+
         return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
@@ -84,6 +86,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderCreate(Request $request)
     {
+        $this->prependAndAddBreadcrumbItem("New " . $this->getUserFriendlyEntityName());
+
         $entity = new $this->entityClass();
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
@@ -124,6 +128,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderShow(Request $request, array $criteria)
     {
+        $this->prependAndAddBreadcrumbItem($this->getUserFriendlyEntityName());
+
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::SHOW, $entity);
@@ -150,6 +156,8 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderEdit(Request $request, array $criteria)
     {
+        $this->prependAndAddBreadcrumbItem("Edit " . $this->getUserFriendlyEntityName());
+
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
@@ -358,6 +366,38 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
+     * prependBreadcrumb
+     *
+     * @return array
+     */
+    public function prependAndAddBreadcrumbItem($item)
+    {
+        if ($this->has('white_october_breadcrumbs') === false) {
+            return false;
+        }
+
+        $this->prependBreadcrumb();
+        $this->get("white_october_breadcrumbs")->addItem($item);
+    }
+
+    /**
+     * prependBreadcrumb
+     *
+     * @return array
+     */
+    public function prependBreadcrumb()
+    {
+        if ($this->has('white_october_breadcrumbs') === false) {
+            return false;
+        }
+
+        $this->get("white_october_breadcrumbs")->addItem(
+            $this->getMenuLabel('list'),
+            $this->get("router")->generate($this->getCrudRoute('list'))
+        );
+    }
+
+    /**
      * Returns the CRUD view based on the action.
      *
      * @param string $action
@@ -371,6 +411,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
         }
 
         return $this->crudViews[$action];
+    }
+
+    /**
+     * Gets the menu label that are displayed in the menu.
+     */
+    public function getMenuLabel($type)
+    {
+        return ucfirst($type) . ' ' . $this->getUserFriendlyEntityName();
     }
 
     /**
