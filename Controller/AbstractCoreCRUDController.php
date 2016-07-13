@@ -78,9 +78,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderList(Request $request, array $criteria = [])
     {
-        if ($this->hasBreadcrumbsBundle() === true) {
-            $this->prependBreadcrumb();
-        }
+        $this->prependBreadcrumb();
 
         return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) +
@@ -103,10 +101,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderCreate(Request $request)
     {
-        if ($this->hasBreadcrumbsBundle() === true) {
-            $this->prependBreadcrumb();
-            $this->breadcrumbs->addItem("New " . $this->getUserFriendlyEntityName());
-        }
+        $this->prependAndAddBreadcrumbItem("New " . $this->getUserFriendlyEntityName());
 
         $entity = new $this->entityClass();
 
@@ -148,10 +143,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderShow(Request $request, array $criteria)
     {
-        if ($this->hasBreadcrumbsBundle() === true) {
-            $this->prependBreadcrumb();
-            $this->breadcrumbs->addItem($this->getUserFriendlyEntityName());
-        }
+        $this->prependAndAddBreadcrumbItem($this->getUserFriendlyEntityName());
 
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
@@ -179,10 +171,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderEdit(Request $request, array $criteria)
     {
-        if ($this->hasBreadcrumbsBundle() === true) {
-            $this->prependBreadcrumb();
-            $this->breadcrumbs->addItem("Edit " . $this->getUserFriendlyEntityName());
-        }
+        $this->prependAndAddBreadcrumbItem("Edit " . $this->getUserFriendlyEntityName());
 
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
@@ -404,12 +393,23 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      *
      * @return array
      */
-    public function prependBreadcrumb()
+    public function prependAndAddBreadcrumbItem($item)
     {
         if ($this->hasBreadcrumbsBundle() === false) {
             return false;
         }
 
+        $this->prependBreadcrumb();
+        $this->breadcrumbs->addItem($item);
+    }
+
+    /**
+     * prependBreadcrumb
+     *
+     * @return array
+     */
+    public function prependBreadcrumb()
+    {
         $this->breadcrumbs = $this->get("white_october_breadcrumbs");
         $this->breadcrumbs->addItem(
             $this->getMenuLabel('list'),
