@@ -21,7 +21,8 @@
     "suggest": {
         "knplabs/knp-paginator-bundle": "2.5.*",
         "knplabs/knp-menu-bundle": "2.1.*",
-        "ras/flash-alert-bundle": "2.1.*"
+        "ras/flash-alert-bundle": "2.1.*",
+        "whiteoctober/breadcrumbs-bundle": "^1.2"
     },
     "autoload": {
         "psr-4": {

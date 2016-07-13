@@ -30,6 +30,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                                 'show' => 'MadrakIOEasyAdminBundle:CRUD:show.html.twig',
                                 'edit' => 'MadrakIOEasyAdminBundle:CRUD:edit.html.twig',
                             ];
+    protected $breadcrumbsBundle;
 
     public function __construct(AbstractType $entityFormType, AbstractListType $entityList, AbstractShowType $entityShow, $entityClass)
     {
@@ -55,6 +56,20 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
+     * Set the breadCrumbsBundle.
+     *
+     * @param WhiteOctoberBreadcrumbsBundle $breadcrumbsBundle
+     *
+     * @return AbstractCRUDController
+     */
+    public function setBreadcrumbsBundle($breadcrumbsBundle)
+    {
+        $this->breadcrumbsBundle = $breadcrumbsBundle;
+
+        return $this;
+    }
+
+    /**
      * Lists all entities.
      *
      * @param Request $request
@@ -63,6 +78,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderList(Request $request, array $criteria = [])
     {
+        if ($this->hasBreadcrumbsBundle() === true) {
+            $this->prependBreadcrumb();
+        }
+
         return $this->render($this->getCrudView('list'),
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
@@ -84,6 +103,11 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderCreate(Request $request)
     {
+        if ($this->hasBreadcrumbsBundle() === true) {
+            $this->prependBreadcrumb();
+            $this->breadcrumbs->addItem("New " . $this->getUserFriendlyEntityName());
+        }
+
         $entity = new $this->entityClass();
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
@@ -124,6 +148,11 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderShow(Request $request, array $criteria)
     {
+        if ($this->hasBreadcrumbsBundle() === true) {
+            $this->prependBreadcrumb();
+            $this->breadcrumbs->addItem($this->getUserFriendlyEntityName());
+        }
+
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::SHOW, $entity);
@@ -150,6 +179,11 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function renderEdit(Request $request, array $criteria)
     {
+        if ($this->hasBreadcrumbsBundle() === true) {
+            $this->prependBreadcrumb();
+            $this->breadcrumbs->addItem("Edit " . $this->getUserFriendlyEntityName());
+        }
+
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
         $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
@@ -313,6 +347,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
+     * Check if the controller has the breadcrumb bundle.
+     */
+    public function hasBreadcrumbsBundle()
+    {
+        return $this->breadcrumbsBundle instanceof \WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
+    }
+
+    /**
      * Check if the controller has the specified crud route.
      */
     public function hasCrudRoute($routeType)
@@ -355,6 +397,24 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function getCrudRoute($routeType)
     {
         return $this->getRelatedRoutes()[$routeType];
+    }
+
+    /**
+     * prependBreadcrumb
+     *
+     * @return array
+     */
+    public function prependBreadcrumb()
+    {
+        if ($this->hasBreadcrumbsBundle() === false) {
+            return false;
+        }
+
+        $this->breadcrumbs = $this->get("white_october_breadcrumbs");
+        $this->breadcrumbs->addItem(
+            $this->getMenuLabel('list'),
+            $this->get("router")->generate($this->getCrudRoute('list'))
+        );
     }
 
     /**
