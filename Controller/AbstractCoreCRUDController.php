@@ -62,7 +62,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      *
      * @return AbstractCRUDController
      */
-    public function setBreadcrumbsBundle($breadcrumbsBundle)
+    public function setBreadcrumbsBundle(WhiteOctoberBreadcrumbsBundle $breadcrumbsBundle)
     {
         $this->breadcrumbsBundle = $breadcrumbsBundle;
 
@@ -410,6 +410,10 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     public function prependBreadcrumb()
     {
+        if ($this->hasBreadcrumbsBundle() === false) {
+            return false;
+        }
+
         $this->breadcrumbs = $this->get("white_october_breadcrumbs");
         $this->breadcrumbs->addItem(
             $this->getMenuLabel('list'),
