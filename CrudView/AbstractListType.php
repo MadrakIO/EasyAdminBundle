@@ -17,6 +17,7 @@ abstract class AbstractListType extends AbstractType
     protected $entityClass;
     protected $paginator;
     protected $checkGrants = true;
+    protected $grantShowAttribute;
     protected $csvFields;
 
     public function __construct(EngineInterface $templating, EntityManagerInterface $entityManager, AuthorizationChecker $authorizationChecker, FieldTypeGuesser $fieldTypeGuesser, FormFactory $formFactory, $entityClass)
@@ -29,9 +30,10 @@ abstract class AbstractListType extends AbstractType
         $this->formFactory = $formFactory;
     }
 
-    public function setCheckGrants($checkGrants)
+    public function setCheckGrants($checkGrants, $grantShowAttribute = EasyAdminVoterInterface::SHOW)
     {
         $this->checkGrants = $checkGrants;
+        $this->grantShowAttribute = $grantShowAttribute;
     }
 
     public function isGranted($attributes, $object = null)
@@ -115,7 +117,7 @@ abstract class AbstractListType extends AbstractType
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($results as &$result) {
-            if ($this->isGranted(EasyAdminVoterInterface::SHOW, $result) === false) {
+            if ($this->isGranted($this->grantShowAttribute, $result) === false) {
                 $result = null;
 
                 continue;

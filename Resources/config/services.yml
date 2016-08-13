@@ -20,7 +20,7 @@ services:
             - '@madrak_io_easy_admin.field_type_guesser'
             - '@form.factory'
         calls:
-            - [ setCheckGrants, [ '%madrak_io_easy_admin.check_grants%' ]]
+            - [ setCheckGrants, [ '%madrak_io_easy_admin.grants.check%', '%madrak_io_easy_admin.grants.attributes.show%' ]]
     madrak_io_easy_admin.crud_show_type:
         abstract: true
         arguments:

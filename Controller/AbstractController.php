@@ -164,7 +164,7 @@ abstract class AbstractController extends Controller
      */
     protected function isGranted($attributes, $object = null)
     {
-        if ($this->getParameter('madrak_io_easy_admin.check_grants') === true) {
+        if ($this->getParameter('madrak_io_easy_admin.grants.check') === true) {
             return parent::isGranted($attributes, $object);
         }
 
@@ -178,7 +178,7 @@ abstract class AbstractController extends Controller
      */
     protected function denyAccessUnlessGranted($attributes, $object = null, $message = 'Access Denied.')
     {
-        if ($this->getParameter('madrak_io_easy_admin.check_grants') === true) {
+        if ($this->getParameter('madrak_io_easy_admin.grants.check') === true) {
             return parent::denyAccessUnlessGranted($attributes, $object, $message);
         }
     }
