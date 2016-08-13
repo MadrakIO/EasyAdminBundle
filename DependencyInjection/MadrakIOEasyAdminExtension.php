@@ -2,6 +2,8 @@
 
 namespace MadrakIO\Bundle\EasyAdminBundle\DependencyInjection;
 
+use RecursiveIteratorIterator;
+use RecursiveArrayIterator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -22,8 +24,15 @@ class MadrakIOEasyAdminExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach ($config as $configKey => $configValue) {
-            $container->setParameter('madrak_io_easy_admin.'.$configKey, $configValue);
+        $recursiveIteratorIterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($config));
+        foreach ($recursiveIteratorIterator as $parameterValue) {
+            $keys = [];
+            for ($depth = 0; $depth <= $recursiveIteratorIterator->getDepth(); ++$depth) {
+                $keys[] = $recursiveIteratorIterator->getSubIterator($depth)->key();
+            }
+
+            $parameterName = implode('.', $keys);
+            $container->setParameter('madrak_io_easy_admin.' . $parameterName, $parameterValue);
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

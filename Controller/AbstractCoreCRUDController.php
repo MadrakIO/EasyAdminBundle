@@ -19,6 +19,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     const UPDATE_RECORD_SUCCESS_MSG = 'Your record was successfully updated.';
     const UPDATE_RECORD_ERROR_MSG = 'There was an error attempting to update your record: %s.';
     const MISSING_CRUD_VIEW = 'The CRUD view for the specified action (%s) does not exist.';
+    const UNEXPECTED_GRANT_ATTRIBUTE = 'The attribute specified (%s) was not expected.';
 
     protected $entityFormType;
     protected $entityList;
@@ -90,7 +91,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $entity = new $this->entityClass();
 
-        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::CREATE, $entity);
+        $this->denyAccessUnlessGranted($this->getGrantAttribute(EasyAdminVoterInterface::CREATE), $entity);
 
         $form = $this->createForm($this->entityFormType, $entity, $this->getCreateFormOptions());
         $form->handleRequest($request);
@@ -132,7 +133,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
-        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::SHOW, $entity);
+        $this->denyAccessUnlessGranted($this->getGrantAttribute(EasyAdminVoterInterface::SHOW), $entity);
 
         $deleteForm = $this->createDeleteForm($request, $entity);
 
@@ -160,7 +161,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
-        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::EDIT, $entity);
+        $this->denyAccessUnlessGranted($this->getGrantAttribute(EasyAdminVoterInterface::EDIT), $entity);
 
         $deleteForm = $this->createDeleteForm($request, $entity);
         $editForm = $this->createForm($this->entityFormType, $entity, $this->getEditFormOptions());
@@ -201,7 +202,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     {
         $entity = $this->entityManager->getRepository($this->entityClass)->findOneBy($criteria);
 
-        $this->denyAccessUnlessGranted(EasyAdminVoterInterface::DELETE, $entity);
+        $this->denyAccessUnlessGranted($this->getGrantAttribute(EasyAdminVoterInterface::DELETE), $entity);
 
         $form = $this->createDeleteForm($request, $entity);
         $form->handleRequest($request);
@@ -343,15 +344,15 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
 
         switch ($routeType) {
             case 'create':
-                return $this->isGranted(EasyAdminVoterInterface::CREATE, $object);
+                return $this->isGranted($this->getGrantAttribute(EasyAdminVoterInterface::CREATE), $object);
             case 'show':
             case 'list':
             case 'csv':
-                return $this->isGranted(EasyAdminVoterInterface::SHOW, $object);
+                return $this->isGranted($this->getGrantAttribute(EasyAdminVoterInterface::SHOW), $object);
             case 'edit':
-                return $this->isGranted(EasyAdminVoterInterface::EDIT, $object);
+                return $this->isGranted($this->getGrantAttribute(EasyAdminVoterInterface::EDIT), $object);
             case 'delete':
-                return $this->isGranted(EasyAdminVoterInterface::DELETE, $object);
+                return $this->isGranted($this->getGrantAttribute(EasyAdminVoterInterface::DELETE), $object);
         }
 
         return false;
@@ -431,7 +432,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
      */
     protected function createDeleteForm(Request $request, $entity)
     {
-        if ($this->isGranted(EasyAdminVoterInterface::DELETE, $entity) === true) {
+        if ($this->isGranted($this->getGrantAttribute(EasyAdminVoterInterface::DELETE), $entity) === true) {
             return $this->createFormBuilder(null, ['attr' => ['style' => 'display: inline']])
                 ->setAction($this->generateUrl($this->getCrudRoute('delete'), $this->getCurrentRouteParameters($request)))
                 ->setMethod('DELETE')
@@ -468,6 +469,29 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
+     * Gets the grant attribute specified in the configuration.
+     *
+     * @return string
+     */
+    public function getGrantAttribute($type)
+    {
+        switch ($type) {
+            case EasyAdminVoterInterface::CREATE:
+                return $this->getParameter('madrak_io_easy_admin.grants.attributes.create');
+            case EasyAdminVoterInterface::SHOW:
+                return $this->getParameter('madrak_io_easy_admin.grants.attributes.show');
+            case EasyAdminVoterInterface::EDIT:
+                return $this->getParameter('madrak_io_easy_admin.grants.attributes.edit');
+            case EasyAdminVoterInterface::DELETE:
+                return $this->getParameter('madrak_io_easy_admin.grants.attributes.delete');
+            case EasyAdminVoterInterface::MENU:
+                return $this->getParameter('madrak_io_easy_admin.grants.attributes.menu');
+        }
+
+        throw new Exception(vsprintf(self::UNEXPECTED_GRANT_ATTRIBUTE, [$type]));
+    }
+
+    /**
      * Gets the parameters that are used in every CRUD view.
      *
      * @return array
@@ -478,7 +502,12 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
                     'parent_template' => $this->getParameter('madrak_io_easy_admin.parent_template'),
                     'current_route' => $this->getCurrentRouteName($request),
                     'routes' => $this->getRelatedRoutes(),
-                    'check_grants' => $this->getParameter('madrak_io_easy_admin.check_grants'),
+                    'check_grants' => $this->getParameter('madrak_io_easy_admin.grants.check'),
+                    'grants_attributes_create' => $this->getParameter('madrak_io_easy_admin.grants.attributes.create'),
+                    'grants_attributes_show' => $this->getParameter('madrak_io_easy_admin.grants.attributes.show'),
+                    'grants_attributes_edit' => $this->getParameter('madrak_io_easy_admin.grants.attributes.edit'),
+                    'grants_attributes_delete' => $this->getParameter('madrak_io_easy_admin.grants.attributes.delete'),
+                    'grants_attributes_menu' => $this->getParameter('madrak_io_easy_admin.grants.attributes.menu'),
                     'can_create' => $this->hasCrudRouteAccess('create'),
                     'has_alerts_enabled' => $this->hasAlertsEnabled()
                 ];

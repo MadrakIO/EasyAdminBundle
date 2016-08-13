@@ -30,7 +30,7 @@
 
                 {% block crud_edit_button %}
                     {% if generated_routes.edit is defined and entity is defined and entity.id is not empty and current_route != routes.edit %}
-                        {% if check_grants == false or check_grants == true and is_granted('EDIT', entity) == true %}
+                        {% if check_grants == false or check_grants == true and is_granted(grants_attributes_edit, entity) == true %}
                             <a href="{{ generated_routes.edit }}" class="btn btn-warning">Edit</a>
                         {% endif %}
                     {% endif %}
@@ -38,7 +38,7 @@
 
                 {% block crud_show_button %}
                     {% if generated_routes.show is defined and entity is defined and entity.id is not empty and current_route != routes.show  %}
-                        {% if check_grants == false or check_grants == true and is_granted('SHOW', entity) == true %}
+                        {% if check_grants == false or check_grants == true and is_granted(grants_attributes_show, entity) == true %}
                             <a href="{{ generated_routes.show }}" class="btn btn-info">Show</a>
                         {% endif %}
                     {% endif %}
@@ -46,7 +46,7 @@
 
                 {% block crud_delete_button %}
                     {% if routes.delete is defined and delete_form is defined %}
-                        {% if check_grants == false or check_grants == true and is_granted('DELETE', entity) == true %}
+                        {% if check_grants == false or check_grants == true and is_granted(grants_attributes_delete, entity) == true %}
                             {{ form_start(delete_form) }}
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             {{ form_end(delete_form) }}
