@@ -34,7 +34,25 @@ class MenuBuilder
 
         foreach ($this->controllerChain->getMenuAwareControllers() as $menuAwareController) {
             foreach ($menuAwareController->getMenuRoutes() as $menuRoute) {
-                $menu->addChild($menuRoute['title'], ['route' => $menuRoute['route'], 'linkAttributes' => ['icon' => $menuAwareController->getMenuIcon()]]);
+                $route = ['route' => $menuRoute['route'], 'linkAttributes' => ['icon' => $menuAwareController->getMenuIcon()]];
+
+                if (method_exists($menuAwareController, 'getMenuParent')) {
+                    $menuParent = $menuAwareController->getMenuParent();
+
+                    if (is_null($menuParent)) {
+                        continue;
+                    }
+
+                    if (isset($menu[$menuParent]) === false) {
+                        $menu->addChild($menuParent);
+                    }
+
+                    $menu[$menuParent]->addChild($menuRoute['title'], $route);
+
+                    continue;
+                }
+
+                $menu->addChild($menuRoute['title'], $route);
             }
         }
 
