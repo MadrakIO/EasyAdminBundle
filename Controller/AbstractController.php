@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 abstract class AbstractController extends Controller
 {
     protected $entityManager;
+    protected $menuGroup;
 
     /**
      * {@inheritdoc}
@@ -89,6 +90,14 @@ abstract class AbstractController extends Controller
         }
 
         return $routes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMenuGroup()
+    {
+        return $this->menuGroup;
     }
 
     /**
