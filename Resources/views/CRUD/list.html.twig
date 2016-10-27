@@ -1,6 +1,8 @@
 {% extends 'MadrakIOEasyAdminBundle:CRUD:layout.html.twig' %}
 
-{% block headline %}List{% endblock %}
+{% block headline %}
+  {% if title is defined %}{{ title }}{% else %}List{% endif %}
+{% endblock %}
 
 {% block crud_content %}
     {{ listView|raw }}
