@@ -115,6 +115,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
                 [
+                    'title' => $this->getPageTitle('create'),
                     'entity' => $entity,
                     'form' => $form->createView(),
                 ]);
@@ -424,7 +425,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     }
 
     /**
-     * Gets the menu label that are displayed in the menu.
+     * Gets the page title that are displayed in the list/create pages.
      */
     public function getPageTitle($type)
     {
