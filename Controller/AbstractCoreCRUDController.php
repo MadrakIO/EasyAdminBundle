@@ -70,6 +70,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
                 [
+                    'title' => $this->getPageTitle('list'),
                     'listView' => $this->entityList->createView($request, $criteria),
                     'list_is_filterable' => $this->entityList->isFilterable(),
                     'list_is_exportable' => $this->entityList->isExportable(),
@@ -114,6 +115,7 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
             $this->getCrudViewParameters($request) +
             $this->getCrudViewRouteParameters($request) +
                 [
+                    'title' => $this->getPageTitle('create'),
                     'entity' => $entity,
                     'form' => $form->createView(),
                 ]);
@@ -420,6 +422,14 @@ abstract class AbstractCoreCRUDController extends AbstractController implements 
     public function getMenuLabel($type)
     {
         return ucfirst($type) . ' ' . $this->getUserFriendlyEntityName();
+    }
+
+    /**
+     * Gets the page title that are displayed in the list/create pages.
+     */
+    public function getPageTitle($type)
+    {
+        return $this->getMenuLabel($type);
     }
 
     /**
